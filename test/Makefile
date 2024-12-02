@@ -1,5 +1,5 @@
 .PHONY: all
-all: PdpWordTest MemoryTest
+all: PdpWordTest MemoryTest LoaderTest
 
 .PHONY: PdpWordTest
 PdpWordTest:
