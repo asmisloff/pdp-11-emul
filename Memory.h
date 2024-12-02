@@ -1,4 +1,4 @@
-#include <array>
+#include <vector>
 #include <cstddef>
 #include <exception>
 #include <stdexcept>
@@ -12,6 +12,9 @@ constexpr int MEM_SIZE = 64 * 1024;
 
 class Memory {
  public:
+  Memory() : mem{std::vector<PdpByte>(MEM_SIZE)}
+    {}
+
   PdpWord getWord(PdpAddr addr) const { 
     checkWordAddr(addr);
     PdpByte low = mem[addr];
@@ -38,7 +41,7 @@ class Memory {
     }
   }
 
-  std::array<PdpByte, MEM_SIZE / 2> mem;
+  std::vector<PdpByte> mem;
 };
 
 #endif
