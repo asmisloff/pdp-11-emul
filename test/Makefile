@@ -1,18 +1,14 @@
 .PHONY: all
-all: PdpWordTest MemoryTest LoaderTest
+all: PdpWord Memory Loader
 
-.PHONY: PdpWordTest
-PdpWordTest:
-	./run_test.sh PdpWordTest
+.PHONY: PdpWord
+PdpWord:
+	./run_test.sh PdpWord
 
-.PHONY: MemoryTest
-MemoryTest:
-	./run_test.sh MemoryTest
+.PHONY: Memory
+Memory:
+	./run_test.sh Memory
 
-.PHONY: LoaderTest
-LoaderTest:
-	./run_test.sh LoaderTest
-
-.PHONY: ComplexNumbersTest
-ComplexNumbersTest:
-	./run_test.sh ComplexNumbersTest
+.PHONY: Loader
+Loader:
+	./run_test.sh Loader ../Loader.cpp
