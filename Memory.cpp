@@ -1,0 +1,32 @@
+#include "Memory.h"
+
+Memory::Memory()
+  : mem{std::vector<PdpByte>(MEM_SIZE)}
+{}
+
+PdpWord Memory::getWord(PdpAddr addr) const { 
+  checkWordAddr(addr);
+  PdpByte low = mem[addr];
+  PdpByte high = mem[addr + 1];
+  return PdpWord(low, high);
+}
+
+void Memory::setWord(PdpAddr addr, PdpWord word) {
+  checkWordAddr(addr);
+  mem[addr] = word.low();
+  mem[addr + 1] = word.high();
+}
+
+PdpByte Memory::getByte(PdpAddr addr) const {
+  return mem[addr];
+}
+
+void Memory::setByte(PdpAddr addr, PdpByte byte) { 
+  mem[addr] = byte; 
+}
+
+void Memory::checkWordAddr(PdpAddr addr) const {
+  if (addr % 2 != 0) {
+    throw std::out_of_range("Illegal address");
+  }
+}

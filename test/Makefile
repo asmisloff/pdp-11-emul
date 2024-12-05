@@ -7,7 +7,7 @@ PdpWord:
 
 .PHONY: Memory
 Memory:
-	./run_test.sh Memory
+	./run_test.sh Memory ../Memory.cpp
 
 .PHONY: Loader
 Loader:
