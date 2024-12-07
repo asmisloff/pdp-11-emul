@@ -1,4 +1,7 @@
 #include "Memory.h"
+#include <cstdio>
+#include <iomanip>
+#include <ios>
 
 Memory::Memory()
   : mem{std::vector<PdpByte>(MEM_SIZE)}
@@ -28,5 +31,14 @@ void Memory::setByte(PdpAddr addr, PdpByte byte) {
 void Memory::checkWordAddr(PdpAddr addr) const {
   if (addr % 2 != 0) {
     throw std::out_of_range("Illegal address");
+  }
+}
+
+void Memory::dump(PdpAddr begin, PdpAddr end, std::ostream &out) {
+  for (; begin < end; begin += 2) {
+    int val = getWord(begin).intValue();
+    out << std::oct << std::setw(6) << std::setfill('0') << begin << ": "
+        << std::oct << std::setw(6) << std::setfill('0') << val << ' '
+        << std::hex << std::setw(4) << std::setfill('0') << val << '\n';
   }
 }

@@ -26,7 +26,7 @@ class PdpWord {
 
   PdpByte high() const { return (PdpByte)word; }
 
-  uint16_t toNativeWord() const { return swapBytes(word); }
+  uint16_t intValue() const { return swapBytes(word); }
 
  private:
   uint16_t word;

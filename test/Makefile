@@ -1,5 +1,5 @@
 .PHONY: all
-all: PdpWord Memory Loader
+	all: PdpWord Memory Loader
 
 .PHONY: PdpWord
 PdpWord:
@@ -11,4 +11,4 @@ Memory:
 
 .PHONY: Loader
 Loader:
-	./run_test.sh Loader ../Loader.cpp
+	./run_test.sh Loader "../Loader.cpp ../Memory.cpp"

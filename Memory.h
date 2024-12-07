@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include <cstddef>
 #include <exception>
@@ -17,6 +18,7 @@ class Memory {
   void setWord(PdpAddr addr, PdpWord word);
   PdpByte getByte(PdpAddr addr) const;
   void setByte(PdpAddr addr, PdpByte byte);
+  void dump(PdpAddr begin, PdpAddr end, std::ostream &out = std::cout);
 
  private:
   void checkWordAddr(PdpAddr addr) const;

@@ -14,8 +14,8 @@ class Loader {
 
  private:
   Memory *mem;
-  unsigned int offset;
-  unsigned int cnt;
+  PdpAddr addr;
+  PdpAddr end;
   std::string line;
   void parseBlockHeader(std::istream &is);
   void readData(std::istream &is);
