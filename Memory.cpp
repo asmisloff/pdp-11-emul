@@ -2,9 +2,13 @@
 #include <cstdio>
 #include <iomanip>
 #include <ios>
+#include <algorithm>
+
+const PdpAddr Memory::lastAddress = 0xFFFF;
+const unsigned int Memory::size = Memory::lastAddress + 1;
 
 Memory::Memory()
-  : mem{std::vector<PdpByte>(MEM_SIZE)}
+  : mem{std::vector<PdpByte>(size)}
 {}
 
 PdpWord Memory::getWord(PdpAddr addr) const { 
@@ -32,6 +36,10 @@ void Memory::checkWordAddr(PdpAddr addr) const {
   if (addr % 2 != 0) {
     throw std::out_of_range("Illegal address");
   }
+}
+
+void Memory::fill(PdpByte val, PdpAddr begin, PdpAddr end) {
+  std::fill(mem.begin() + begin, mem.begin() + end, val);
 }
 
 void Memory::dump(PdpAddr begin, PdpAddr end, std::ostream &out) {

@@ -9,8 +9,6 @@
 #ifndef RAM_H
 #define RAM_H
 
-constexpr int MEM_SIZE = 64 * 1024;
-
 class Memory {
  public:
   Memory();
@@ -18,7 +16,10 @@ class Memory {
   void setWord(PdpAddr addr, PdpWord word);
   PdpByte getByte(PdpAddr addr) const;
   void setByte(PdpAddr addr, PdpByte byte);
+  void fill(PdpByte val, PdpAddr begin = 0, PdpAddr end = lastAddress);
   void dump(PdpAddr begin, PdpAddr end, std::ostream &out = std::cout);
+  static const PdpAddr lastAddress;
+  static const unsigned int size;
 
  private:
   void checkWordAddr(PdpAddr addr) const;
