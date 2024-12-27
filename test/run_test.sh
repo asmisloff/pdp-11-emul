@@ -1,6 +1,6 @@
 #!/bin/bash
 
-g++ -g -Wall -Wextra $1Test.cpp $2 -o $1
+g++ -std=c++11 -g -Wall -Wextra $1Test.cpp $2 -o $1
 
 if [ $? -eq 0 ]
 then
