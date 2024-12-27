@@ -1,7 +1,6 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <iomanip>
 
 #include "Loader.h"
 
@@ -37,9 +36,6 @@ void Loader::parseBlockHeader(std::istream &is) {
     if (!ss) {
       throw std::invalid_argument("Malformed word: " + line);
     }
-    // std::cout << "0x" << std::setw(4) << std::setfill('0') << std::hex << addr << ' '
-    //           << "0x" << std::setw(4) << std::setfill('0') << std::hex << end - addr
-    //           << '\n';
   }
 }
 
