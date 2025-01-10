@@ -13,6 +13,7 @@ class Machine {
   PdpWord pc();
   void pc(PdpWord w);
   void run(std::istream& is);
+  const Memory& memory();
 
  private:
   Memory mem;

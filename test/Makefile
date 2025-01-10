@@ -1,4 +1,4 @@
-.PHONY: all PdpWord Memory Loader Logger
+.PHONY: all PdpWord Memory Loader Logger Command
 
 all: PdpWord Memory Loader
 
@@ -13,3 +13,6 @@ Loader:
 
 Logger:
 	./run_test.sh Logger "../Logger.cpp"
+
+Command:
+	./run_test.sh Command "../Command.cpp"

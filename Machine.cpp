@@ -17,6 +17,10 @@ void Machine::pc(PdpWord w) {
   regs[7] = w;
 }
 
+const Memory& Machine::memory() {
+  return mem;
+}
+
 void Machine::run(std::istream& is) {
   loader.load(is);
   pc(01000);
