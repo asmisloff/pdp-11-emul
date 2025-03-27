@@ -11,9 +11,9 @@ const MovCommand  Machine::MOV;
 const HaltCommand Machine::HALT;
 
 const std::vector<const Command*> Machine::commands = {
-  &ADD, 
-  &MOV,
-  &HALT
+  &Machine::ADD, 
+  &Machine::MOV,
+  &Machine::HALT
 };
 
 Machine::Machine() 
@@ -21,12 +21,8 @@ Machine::Machine()
   , regs{0, 0, 0, 0, 0, 0, 0, 0}
 {}
 
-PdpWord Machine::pc() { 
+PdpWord& Machine::pc() { 
   return regs[7];
-}
-
-void Machine::pc(PdpWord w) {
-  regs[7] = w;
 }
 
 const Command* getCommand(int opcode) {
@@ -42,16 +38,27 @@ const Command* getCommand(int opcode) {
 
 void Machine::run(std::istream& is) {
   loader.load(is);
-  pc(01000);
-  PdpWord w(0);
+  pc() = 01000;
   const Command *cmd = nullptr;
   do {
-    uint16_t address = pc().intValue();
-    int value = mem.getWord(address).intValue();
+    int value = mem.getWord(pc()++);
     cmd = getCommand(value);
-    auto name = (cmd == nullptr) ? "UNKNOWN" : cmd->name();
-    logger.trace("%06o %06o: %s\n", address, value, name.c_str());
-    pc(address + 2);
+    // todo
+  } while (cmd != &HALT);
+  std::cout << "THE END!\n";
+  exit(0);
+}
+
+void Machine::trace_commands(std::istream& is) {
+  loader.load(is);
+  pc() = 01000;
+  const Command *cmd = nullptr;
+  setLoggingLevel(DEBUG);
+  do {
+    int opcode = mem.getWord(pc()++);
+    cmd = getCommand(opcode);
+    cmd->exec(opcode, *this);
+    // logger.trace("%06o %06o: %s\n", address, opcode, cmd->to_string(opcode, *this));
   } while (cmd != &HALT);
   std::cout << "THE END!\n";
   exit(0);

@@ -12,11 +12,14 @@
 class Machine {
  public:
   Machine();
-  PdpWord pc();
-  void pc(PdpWord w);
+  PdpWord& pc();
   void run(std::istream& is);
-  static const std::vector<const Command*> commands;
+  void trace_commands(std::istream& is);
   void setLoggingLevel(LoggingLevel level);
+  const Logger& getLogger() const { return logger; }
+  Memory& getMemory() { return mem; }
+  PdpWord& reg(int index) { return regs[index]; }
+  static const std::vector<const Command*> commands;
 
  private:
   Memory mem;

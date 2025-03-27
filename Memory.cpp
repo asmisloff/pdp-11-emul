@@ -34,7 +34,7 @@ void Memory::setByte(PdpAddr addr, PdpByte byte) {
 
 void Memory::checkWordAddr(PdpAddr addr) const {
   if (addr % 2 != 0) {
-    throw std::out_of_range("Illegal address");
+    throw std::out_of_range("Illegal address: " + std::to_string(addr) + ". Must be even.");
   }
 }
 

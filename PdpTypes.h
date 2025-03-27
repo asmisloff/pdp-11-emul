@@ -18,20 +18,24 @@ class PdpWord {
     word |= high;
   }
 
-  bool operator==(const PdpWord &other) const { return word == other.word; }
-
-  bool operator!=(const PdpWord &other) const { return word != other.word; }
-
-  PdpByte low() const { return word >> PDP_BYTE_SIZE; }
-
-  PdpByte high() const { return (PdpByte)word; }
-
-  uint16_t intValue() const { return swapBytes(word); }
+  inline bool operator==(const PdpWord &other) const { return word == other.word; }
+  inline bool operator!=(const PdpWord &other) const { return word != other.word; }
+  inline PdpByte low() const { return word >> PDP_BYTE_SIZE; }
+  inline PdpByte high() const { return (PdpByte)word; }
+  inline uint16_t intValue() const { return swapBytes(word); }
+  inline PdpWord operator+(int amount) { return PdpWord(intValue() + amount); }
+  inline void operator+=(int amount) { word = swapBytes(swapBytes(word) + amount); }
+  inline PdpWord operator++(int) {
+    PdpWord copy = *this;
+    *this += 2; 
+    return copy;
+  }
+  inline operator PdpAddr() const { return intValue(); }
 
  private:
   uint16_t word;
 
-  uint16_t swapBytes(uint16_t w) const {
+  inline uint16_t swapBytes(uint16_t w) const {
     return (w >> PDP_BYTE_SIZE) | (w << PDP_BYTE_SIZE);
   }
 };
