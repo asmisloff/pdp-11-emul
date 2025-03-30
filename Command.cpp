@@ -36,11 +36,16 @@ bool AddCommand::match(int opcode) const {
 }
 
 void AddCommand::exec(int opcode, Machine& m) const {
-  const int s_mode = (opcode & 0007000) >> 9;
-  const int s_reg = (opcode & 0000700) >> 6;
-  const int d_mode = (opcode & 0000070) >> 3;
-  const int d_reg = opcode & 0000007;
-  m.getLogger().debug("%s %d %d %d %d\n", name().c_str(), s_mode, s_reg, d_mode, d_reg);
+  Operand ss = Operand::SS(opcode);
+  Operand dd = Operand::DD(opcode);
+  PdpWord v1 = ss.read(m);
+  PdpWord v2 = dd.read(m);
+  dd.write(m, PdpWord(v1.intValue() + v2.intValue()));
+  if (m.getLogger().getLevel() >= DEBUG) {
+    std::stringstream str_Stream;
+    str_Stream << name() << ' ' << 'R' << ss.getReg() << ' ' << 'R' << dd.getReg();
+    m.getLogger().debug("%s\n", str_Stream.str().c_str());
+  }
 }
 
 const std::string& HaltCommand::name() const { return HALT; }

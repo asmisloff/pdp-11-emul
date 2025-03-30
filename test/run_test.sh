@@ -7,9 +7,4 @@ then
     ./$1
 fi
 
-if [ $? -eq 0 ]
-then
-    echo PASSED
-fi
-
 rm ./$1

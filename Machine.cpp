@@ -45,7 +45,6 @@ void Machine::run(std::istream& is) {
     cmd = getCommand(value);
     // todo
   } while (cmd != &HALT);
-  std::cout << "THE END!\n";
   exit(0);
 }
 
@@ -58,10 +57,11 @@ void Machine::trace_commands(std::istream& is) {
     int opcode = mem.getWord(pc()++);
     cmd = getCommand(opcode);
     cmd->exec(opcode, *this);
-    // logger.trace("%06o %06o: %s\n", address, opcode, cmd->to_string(opcode, *this));
   } while (cmd != &HALT);
-  std::cout << "THE END!\n";
-  exit(0);
+  for (int i = 0; i < 8; i++) {
+    logger.debug("R%d:%o ", i, regs[i].intValue());
+  }
+  std::cout << std::endl;
 }
 
 void Machine::setLoggingLevel(LoggingLevel level) {
