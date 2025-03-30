@@ -23,9 +23,9 @@ void MovCommand::exec(int opcode, Machine& m) const {
   Logger logger = m.getLogger();
   if (logger.getLevel() >= DEBUG) {
     const char *cmd_name = name().c_str();
-    const char *ss_str = ss.to_string(m).c_str();
-    const char *dd_str = dd.to_string(m).c_str();
-    logger.debug("%s %s %s\n", cmd_name, ss_str, dd_str);
+    std::string ss_str = ss.to_string(m);
+    std::string dd_str = dd.to_string(m);
+    logger.debug("%s %s %s\n", cmd_name, ss_str.c_str(), dd_str.c_str());
   }
   PdpWord value = ss.read(m);
   dd.write(m, value);
@@ -43,9 +43,9 @@ void AddCommand::exec(int opcode, Machine& m) const {
   Logger logger = m.getLogger();
   if (logger.getLevel() >= DEBUG) {
     const char *cmd_name = name().c_str();
-    const char *ss_str = ss.to_string(m).c_str();
-    const char *dd_str = dd.to_string(m).c_str();
-    logger.debug("%s %s %s\n", cmd_name, ss_str, dd_str);
+    std::string ss_str = ss.to_string(m);
+    std::string dd_str = dd.to_string(m);
+    logger.debug("%s %s %s\n", cmd_name, ss_str.c_str(), dd_str.c_str());
   }
   PdpWord v1 = ss.read(m);
   PdpWord v2 = dd.read(m);

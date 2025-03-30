@@ -41,16 +41,19 @@ void Machine::run(std::istream& is) {
   loader.load(is);
   pc() = 01000;
   const Command *cmd = nullptr;
-  setLoggingLevel(DEBUG);
   do {
-    int opcode = mem.getWord(pc()++);
+    int opcode = mem.getWord(pc());
+    logger.debug("%06o %06o: ", pc().intValue(), opcode);
+    pc()++;
     cmd = getCommand(opcode);
     cmd->exec(opcode, *this);
   } while (cmd != &HALT);
-  for (int i = 0; i < 8; i++) {
-    logger.debug("R%d:%o ", i, regs[i].intValue());
+  if (logger.getLevel() == DEBUG) {
+    for (int i = 0; i < 8; i++) {
+      logger.debug("R%d:%o ", i, regs[i].intValue());
+    }
+    std::cout << std::endl;
   }
-  std::cout << std::endl;
 }
 
 void Machine::setLoggingLevel(LoggingLevel level) {
