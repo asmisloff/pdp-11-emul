@@ -14,7 +14,6 @@ class Machine {
   Machine();
   PdpWord& pc();
   void run(std::istream& is);
-  void trace_commands(std::istream& is);
   void setLoggingLevel(LoggingLevel level);
   const Logger& getLogger() const { return logger; }
   Memory& getMemory() { return mem; }

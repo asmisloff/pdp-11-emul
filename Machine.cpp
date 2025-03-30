@@ -4,7 +4,8 @@
 #include "./Machine.h"
 #include "./Loader.h"
 #include "./PdpTypes.h"
-#include "Command.h"
+#include "./Command.h"
+#include "./Operand.h"
 
 const AddCommand  Machine::ADD;
 const MovCommand  Machine::MOV;
@@ -37,18 +38,6 @@ const Command* getCommand(int opcode) {
 }
 
 void Machine::run(std::istream& is) {
-  loader.load(is);
-  pc() = 01000;
-  const Command *cmd = nullptr;
-  do {
-    int value = mem.getWord(pc()++);
-    cmd = getCommand(value);
-    // todo
-  } while (cmd != &HALT);
-  exit(0);
-}
-
-void Machine::trace_commands(std::istream& is) {
   loader.load(is);
   pc() = 01000;
   const Command *cmd = nullptr;

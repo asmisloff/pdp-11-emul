@@ -13,30 +13,44 @@ Operand Operand::DD(int opcode) {
 }
 
 PdpWord Operand::read(Machine& m) {
-  switch (mode) {
+  switch (mode_) {
     case 0:
-      return m.reg(reg);
+      return m.reg(reg_);
     case 1:
-      return m.getMemory().getWord(m.reg(reg));
+      return m.getMemory().getWord(m.reg(reg_));
     case 2:
-      return m.getMemory().getWord(m.reg(reg)++);
+      return m.getMemory().getWord(m.reg(reg_)++);
     default:
       throw std::logic_error("Unsupported mode");
   }
 }
 
 void Operand::write(Machine& m, PdpWord word) {
-  switch (mode) {
+  switch (mode_) {
     case 0: 
-      m.reg(reg) = word;
+      m.reg(reg_) = word;
       break;
     case 1:
-      m.getMemory().setWord(m.reg(reg), word);
+      m.getMemory().setWord(m.reg(reg_), word);
       break;
     case 2: 
-      m.getMemory().setWord(m.reg(reg)++, word);
+      m.getMemory().setWord(m.reg(reg_)++, word);
       break;
     default:
       throw std::logic_error("Unsupported mode");
   }
+}
+
+std::string Operand::to_string(Machine& m) const {
+  switch (mode_) {
+    case 0:
+      return "R" + std::to_string(reg_);
+    case 1: case 2: {
+      PdpWord ptr = m.reg(reg_);
+      PdpWord word = m.getMemory().getWord(ptr);
+      return "#" + std::to_string(word.intValue());
+    }
+    default:
+      throw std::logic_error("Unsopported mode");      
+  }   
 }

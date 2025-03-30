@@ -19,8 +19,8 @@ void testMachineRun() {
   Machine m;
   std::ifstream fs("./e2e/01_sum/01_sum.pdp.o");
   m.setLoggingLevel(TRACE);
-  m.trace_commands(fs);
-  std::cout << "PASSED";
+  m.run(fs);
+  std::cout << "PASSED\n";
 }
 
 int main() {
