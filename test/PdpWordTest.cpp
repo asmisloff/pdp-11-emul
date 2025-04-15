@@ -1,6 +1,7 @@
 #include <cassert>
 
 #include "../PdpTypes.h"
+#include <iostream>
 
 void testNativeWordToPdpWordConstructor() {
   PdpWord word(0x00FF);
@@ -16,8 +17,18 @@ void testTwoPdpBytesToPdpWordConstructor() {
   assert(word.high() == 0xCD);
 }
 
+void testStreamOperator() {
+  std::cout << "opertor<<: ";
+  PdpWord word(01234);
+  std::stringstream ss;
+  ss << word;
+  assert(ss.str() == "001234");
+  std::cout << "PASSED\n";
+}
+
 int main() {
   testNativeWordToPdpWordConstructor();
   testTwoPdpBytesToPdpWordConstructor();
+  testStreamOperator();
   return 0;
 }

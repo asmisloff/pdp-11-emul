@@ -16,12 +16,12 @@ bool MovCommand::match(int opcode) const {
 void MovCommand::exec(int opcode, Machine& m) const {
   Operand ss = Operand::SS(opcode);
   Operand dd = Operand::DD(opcode);
-  Logger logger = m.logger();
-  if (logger.level >= DEBUG) {
+  Logger& logger = m.logger();
+  if (logger.level >= Logger::Level::DEBUG) {
     const char *cmd_name = name().c_str();
     std::string ss_str = ss.to_string(m);
     std::string dd_str = dd.to_string(m);
-    logger.debug("%s %s %s\n", cmd_name, ss_str.c_str(), dd_str.c_str());
+    logger.debug << cmd_name << ' ' << ss_str.c_str() << ' ' << dd_str.c_str() << '\n';
   }
   PdpWord value = ss.read(m);
   dd.write(m, value);
@@ -36,12 +36,12 @@ bool AddCommand::match(int opcode) const {
 void AddCommand::exec(int opcode, Machine& m) const {
   Operand ss = Operand::SS(opcode);
   Operand dd = Operand::DD(opcode);
-  Logger logger = m.logger();
-  if (logger.level >= DEBUG) {
+  Logger& logger = m.logger();
+  if (logger.level >= Logger::Level::DEBUG) {
     const char *cmd_name = name().c_str();
     std::string ss_str = ss.to_string(m);
     std::string dd_str = dd.to_string(m);
-    logger.debug("%s %s %s\n", cmd_name, ss_str.c_str(), dd_str.c_str());
+    logger.debug << cmd_name << ' ' << ss_str.c_str() << ' ' << dd_str.c_str() << '\n';
   }
   PdpWord v1 = ss.read(m);
   PdpWord v2 = dd.read(m);
@@ -54,5 +54,5 @@ bool HaltCommand::match(int opcode) const { return (0177777 & opcode) == 0; }
 
 void HaltCommand::exec(int opcode, Machine& m) const {
   (void)opcode;
-  m.logger().debug("%s\n", name().c_str());
+  m.logger().debug << name().c_str() << '\n';
 }

@@ -1,15 +1,17 @@
+#include <memory>
+#include <iostream>
+#include <sstream>
 #include "../Logger.h"
 
 void test() {
     Logger logger;
-    const char *fmt = "%d + %d = %d\n";
-    int a = 2;
-    int b = 3;
-    logger.setLevel(INFO);
-    logger.debug(fmt, a, b, a + b);
-    logger.setLevel(ERROR);
-    logger.info(fmt, a, b, a + b);
-    logger.error(fmt, a, b, a + b);
+    int a = 2, b = 3;
+    logger.level = Logger::Level::DEBUG;
+    logger.debug.setStream(std::make_unique<std::stringstream>());
+    logger.debug << a << " + " << b << " = " << (a + b) << '\n';
+    std::cout << "DEBUG: " << dynamic_cast<std::stringstream*>(logger.debug.stream())->str();
+    logger.debug.setStream(nullptr);
+    logger.error << a << " + " << b << " = " << (a + b) << '\n';
 }
 
 int main() {

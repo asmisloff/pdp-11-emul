@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <iomanip>
 
 #ifndef PDP_TYPES_H
 #define PDP_TYPES_H
@@ -31,10 +32,15 @@ class PdpWord {
  private:
   uint16_t word;
 
-  inline uint16_t swapBytes(uint16_t w) const {
+  uint16_t swapBytes(uint16_t w) const {
     return (w >> PDP_BYTE_SIZE) | (w << PDP_BYTE_SIZE);
   }
 };
+
+inline std::ostream& operator<<(std::ostream &out, const PdpWord &word) {
+  return out << std::oct << std::setfill('0') << std::setw(6)
+             << word.intValue();
+}
 
 inline PdpWord PdpWord::operator++(int)  {
   PdpWord copy = *this;
