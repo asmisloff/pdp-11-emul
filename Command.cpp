@@ -3,10 +3,6 @@
 #include "./Logger.h"
 #include "./Operand.h"
 
-#include <ios>
-#include <iostream>
-#include <sstream>
-
 static const std::string MOV = "MOV";
 static const std::string ADD = "ADD";
 static const std::string HALT = "HALT";
@@ -20,8 +16,8 @@ bool MovCommand::match(int opcode) const {
 void MovCommand::exec(int opcode, Machine& m) const {
   Operand ss = Operand::SS(opcode);
   Operand dd = Operand::DD(opcode);
-  Logger logger = m.getLogger();
-  if (logger.getLevel() >= DEBUG) {
+  Logger logger = m.logger();
+  if (logger.level >= DEBUG) {
     const char *cmd_name = name().c_str();
     std::string ss_str = ss.to_string(m);
     std::string dd_str = dd.to_string(m);
@@ -40,8 +36,8 @@ bool AddCommand::match(int opcode) const {
 void AddCommand::exec(int opcode, Machine& m) const {
   Operand ss = Operand::SS(opcode);
   Operand dd = Operand::DD(opcode);
-  Logger logger = m.getLogger();
-  if (logger.getLevel() >= DEBUG) {
+  Logger logger = m.logger();
+  if (logger.level >= DEBUG) {
     const char *cmd_name = name().c_str();
     std::string ss_str = ss.to_string(m);
     std::string dd_str = dd.to_string(m);
@@ -58,5 +54,5 @@ bool HaltCommand::match(int opcode) const { return (0177777 & opcode) == 0; }
 
 void HaltCommand::exec(int opcode, Machine& m) const {
   (void)opcode;
-  m.getLogger().debug("%s\n", name().c_str());
+  m.logger().debug("%s\n", name().c_str());
 }

@@ -18,7 +18,7 @@ void testReadMode1() {
   PdpAddr addr = 012346;
   PdpWord expected = 013000;
   m.reg(2) = addr;
-  m.getMemory().setWord(addr, expected);
+  m.mem().setWord(addr, expected);
   Operand op = Operand::SS(011200);
   PdpWord actual = op.read(m);
   assert(actual == expected);
@@ -30,7 +30,7 @@ void testReadMode2() {
   PdpAddr addr = 012346;
   PdpWord expected = 013000;
   m.pc() = addr;
-  m.getMemory().setWord(addr, expected);
+  m.mem().setWord(addr, expected);
   Operand op = Operand::SS(012700);
   PdpWord actual = op.read(m);
   assert(actual == expected);

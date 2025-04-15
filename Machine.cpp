@@ -18,7 +18,7 @@ const std::vector<const Command*> Machine::commands = {
 };
 
 Machine::Machine() 
-  : loader{Loader(&mem)}
+  : loader_{Loader(&mem_)}
   , regs{0, 0, 0, 0, 0, 0, 0, 0}
 {}
 
@@ -38,24 +38,20 @@ const Command* getCommand(int opcode) {
 }
 
 void Machine::run(std::istream& is) {
-  loader.load(is);
+  loader_.load(is);
   pc() = 01000;
   const Command *cmd = nullptr;
   do {
-    int opcode = mem.getWord(pc());
-    logger.debug("%06o %06o: ", pc().intValue(), opcode);
+    int opcode = mem_.getWord(pc());
+    logger_.debug("%06o %06o: ", pc().intValue(), opcode);
     pc()++;
     cmd = getCommand(opcode);
     cmd->exec(opcode, *this);
   } while (cmd != &HALT);
-  if (logger.getLevel() == DEBUG) {
+  if (logger_.level == DEBUG) {
     for (int i = 0; i < 8; i++) {
-      logger.debug("R%d:%o ", i, regs[i].intValue());
+      logger_.debug("R%d:%o ", i, regs[i].intValue());
     }
     std::cout << std::endl;
   }
-}
-
-void Machine::setLoggingLevel(LoggingLevel level) {
-  logger.setLevel(level);
 }

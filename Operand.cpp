@@ -17,9 +17,9 @@ PdpWord Operand::read(Machine& m) {
     case 0:
       return m.reg(reg_);
     case 1:
-      return m.getMemory().getWord(m.reg(reg_));
+      return m.mem().getWord(m.reg(reg_));
     case 2:
-      return m.getMemory().getWord(m.reg(reg_)++);
+      return m.mem().getWord(m.reg(reg_)++);
     default:
       throw std::logic_error("Unsupported mode");
   }
@@ -31,10 +31,10 @@ void Operand::write(Machine& m, PdpWord word) {
       m.reg(reg_) = word;
       break;
     case 1:
-      m.getMemory().setWord(m.reg(reg_), word);
+      m.mem().setWord(m.reg(reg_), word);
       break;
     case 2: 
-      m.getMemory().setWord(m.reg(reg_)++, word);
+      m.mem().setWord(m.reg(reg_)++, word);
       break;
     default:
       throw std::logic_error("Unsupported mode");
@@ -47,7 +47,7 @@ std::string Operand::to_string(Machine& m) const {
       return "R" + std::to_string(reg_);
     case 1: case 2: {
       PdpWord ptr = m.reg(reg_);
-      PdpWord word = m.getMemory().getWord(ptr);
+      PdpWord word = m.mem().getWord(ptr);
       return "#" + std::to_string(word.intValue());
     }
     default:

@@ -14,16 +14,15 @@ class Machine {
   Machine();
   PdpWord& pc();
   void run(std::istream& is);
-  void setLoggingLevel(LoggingLevel level);
-  const Logger& getLogger() const { return logger; }
-  Memory& getMemory() { return mem; }
+  Logger& logger() { return logger_; }
+  Memory& mem() { return mem_; }
   PdpWord& reg(int index) { return regs[index]; }
   static const std::vector<const Command*> commands;
 
  private:
-  Memory mem;
-  Loader loader;
-  Logger logger;
+  Memory mem_;
+  Loader loader_;
+  Logger logger_;
   PdpWord regs[8];
   static const AddCommand ADD;
   static const MovCommand MOV;

@@ -6,13 +6,9 @@
 enum LoggingLevel { ERROR, INFO, TRACE, DEBUG };
 
 class Logger {
- public:
-  Logger();
+ public:  
+  LoggingLevel level = LoggingLevel::INFO;
 
-  void setLevel(LoggingLevel level);
-  
-  LoggingLevel getLevel() const;
-  
   template<class... Args>
   inline void log(LoggingLevel level, const char *fmt, Args... args) const;
   
@@ -27,9 +23,6 @@ class Logger {
 
   template<class... Args>
   inline void debug(const char *fmt, Args... args) const;
-
- private:
-  LoggingLevel level;
 };
 
 template<class... Args>
