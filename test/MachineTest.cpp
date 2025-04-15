@@ -19,13 +19,13 @@ void testEmptyProgram() {
   std::cout << "Empty program: ";
   Machine m;
   m.logger().level = Logger::Level::DEBUG;
-  m.logger().debug.setStream(std::make_unique<std::stringstream>());
+  m.logger().debug().setStream(std::make_unique<std::stringstream>());
   std::stringstream ss;
   ss << "200 2\n"
      << "0\n"
      << "0\n";
   m.run(ss);
-  std::cout << dynamic_cast<std::stringstream*>(m.logger().debug.stream())->str() << '\n';
+  std::cout << static_cast<std::stringstream*>(m.logger().debug().stream())->str() << '\n';
   std::cout << "PASSED\n";
 }
 

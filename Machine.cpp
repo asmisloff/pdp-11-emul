@@ -43,14 +43,14 @@ void Machine::run(std::istream& is) {
   const Command *cmd = nullptr;
   do {
     int opcode = mem_.getWord(pc());
-    logger_.debug << pc() << ' ' << std::oct << PdpWord(opcode) << '\n';
+    logger().debug() << pc() << ' ' << std::oct << PdpWord(opcode) << '\n';
     pc()++;
     cmd = getCommand(opcode);
     cmd->exec(opcode, *this);
   } while (cmd != &HALT);
   if (logger_.level == Logger::Level::DEBUG) {
     for (int i = 0; i < 8; i++) {
-      logger_.debug << 'R' << i << ':' << std::oct << regs[i].intValue() << ' ';
+      logger().debug() << 'R' << i << ':' << std::oct << regs[i].intValue() << ' ';
     }
     std::cout << std::endl;
   }
