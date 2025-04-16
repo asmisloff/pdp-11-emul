@@ -6,6 +6,7 @@
 #include "./PdpTypes.h"
 #include "./Command.h"
 #include "./Operand.h"
+#include "Machine.h"
 
 const AddCommand  Machine::ADD;
 const MovCommand  Machine::MOV;
@@ -22,8 +23,8 @@ Machine::Machine()
   , regs{0, 0, 0, 0, 0, 0, 0, 0}
 {}
 
-PdpWord& Machine::pc() { 
-  return regs[7];
+PdpWord &Machine::pc() {
+    return regs[7];
 }
 
 const Command* getCommand(int opcode) {
@@ -49,9 +50,9 @@ void Machine::run(std::istream& is) {
     cmd->exec(opcode, *this);
   } while (cmd != &HALT);
   if (logger_.level == Logger::Level::DEBUG) {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 7; i++) {
       logger().debug() << 'R' << i << ':' << std::oct << regs[i].intValue() << ' ';
     }
-    std::cout << std::endl;
+    logger().debug() << 'R' << 7 << ':' << std::oct << regs[7].intValue() << '\n';
   }
 }
