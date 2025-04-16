@@ -48,21 +48,29 @@ void testEmptyProgram() {
   std::cout << "PASSED\n";
 }
 
-void test_01_sum() {
-  std::cout << "01_sum: ";
-  std::ifstream fs("./e2e/01_sum/01_sum.pdp.o");
-  Machine m;
-  setupLogger(m);
-  m.run(fs);
-  auto expected = read("./data/01_sum_expected.txt");
-  auto actual = fromLoggerStringStream(m);
-  assert(expected == actual);
-  std::cout << "PASSED\n";
+void test_e2e_cases() {
+  std::vector<std::string> names = { 
+    "01_sum",
+    "01_sum_mode1",
+    "01_sum_mode1_big"
+  };
+
+  for (size_t i = 0; i < names.size(); ++i) {
+    std::cout << names[i] << ": ";
+    std::ifstream fs("./e2e/" + names[i] + "/" + names[i] + ".pdp.o");
+    Machine m;
+    setupLogger(m);
+    m.run(fs);
+    auto expected = read("./data/" + names[i] + "_expected.txt");
+    auto actual = fromLoggerStringStream(m);
+    assert(expected == actual);
+    std::cout << "PASSED\n";
+  }
 }
 
 int main() {
   testMachineCommands();
   testEmptyProgram();
-  test_01_sum();
+  test_e2e_cases();
   return 0;
 }

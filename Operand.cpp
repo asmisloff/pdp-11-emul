@@ -42,15 +42,22 @@ void Operand::write(Machine& m, PdpWord word) {
 }
 
 std::string Operand::to_string(Machine& m) const {
+  std::stringstream ss;
   switch (mode_) {
     case 0:
-      return "R" + std::to_string(reg_);
+      ss << "R" << static_cast<int>(reg_);
+      break;
     case 1: case 2: {
       PdpWord ptr = m.reg(reg_);
-      PdpWord word = m.mem().getWord(ptr);
-      return "#" + std::to_string(word.intValue());
+      if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
+        ss << "#" << std::oct << m.mem().getWord(ptr).intValue();
+      } else { // Если другой регистр, то его номер в скобках.
+        ss << "(R" << static_cast<int>(reg_) << ")";
+      }
+      break;
     }
     default:
       throw std::logic_error("Unsopported mode");      
-  }   
+  }
+  return ss.str();
 }
