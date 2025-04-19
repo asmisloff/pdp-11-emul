@@ -25,8 +25,11 @@ class PdpWord {
   PdpByte high() const { return (PdpByte)word; }
   uint16_t intValue() const { return swapBytes(word); }
   PdpWord operator+(const PdpWord &other) const { return PdpWord(intValue() + other.intValue()); }
+  PdpWord operator-(const PdpWord &other) const { return PdpWord(intValue() - other.intValue()); }
   void operator+=(int amount) { word = swapBytes(swapBytes(word) + amount); }
+  void operator-=(int amount) { word = swapBytes(swapBytes(word) - amount); }
   PdpWord operator++(int);
+  PdpWord& operator--();
   operator PdpAddr() const { return intValue(); }
 
  private:
@@ -46,6 +49,11 @@ inline PdpWord PdpWord::operator++(int)  {
   PdpWord copy = *this;
   *this += 2; 
   return copy;
+}
+
+inline PdpWord& PdpWord::operator--() {
+  *this -= 2;
+  return *this;
 }
 
 #endif

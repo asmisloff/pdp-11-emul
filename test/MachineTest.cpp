@@ -52,7 +52,8 @@ void test_e2e_cases() {
   std::vector<std::string> names = { 
     "01_sum",
     "01_sum_mode1",
-    "01_sum_mode1_big"
+    "01_sum_mode1_big",
+    "01_sum_neg",
   };
 
   for (size_t i = 0; i < names.size(); ++i) {
@@ -63,7 +64,24 @@ void test_e2e_cases() {
     m.run(fs);
     auto expected = read("./data/" + names[i] + "_expected.txt");
     auto actual = fromLoggerStringStream(m);
+    // std::cout << actual << std::endl;
     assert(expected == actual);
+    std::cout << "PASSED\n";
+  }
+}
+
+void test_04_mode4() {
+  std::cout << "04_mode4: ";
+  std::ifstream ifs("./e2e/04_mode4/04_mode4.pdp.o");
+  Machine m;
+  setupLogger(m);
+  try {
+    m.run(ifs);
+  } catch (std::out_of_range& e) {
+    assert(strcmp(e.what(), "Illegal address: 0") == 0);
+    for (PdpAddr addr = 02; addr < 01000; addr += 02) {
+      assert(m.mem().getWord(addr).intValue() == 0014747);
+    }
     std::cout << "PASSED\n";
   }
 }
@@ -72,5 +90,6 @@ int main() {
   testMachineCommands();
   testEmptyProgram();
   test_e2e_cases();
+  test_04_mode4();
   return 0;
 }

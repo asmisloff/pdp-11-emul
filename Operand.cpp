@@ -20,8 +20,16 @@ PdpWord Operand::read(Machine& m) {
       return m.mem().getWord(m.reg(reg_));
     case 2:
       return m.mem().getWord(m.reg(reg_)++);
+    case 3: {
+      PdpWord ptrArrd = m.reg(reg_)++;
+      PdpWord addr = m.mem().getWord(ptrArrd);
+      return m.mem().getWord(addr);
+    }
+    case 4: {
+      return m.mem().getWord(--m.reg(reg_));
+    }
     default:
-      throw std::logic_error("Unsupported mode");
+      throw std::logic_error("Unsupported mode -- Operand::read");
   }
 }
 
@@ -36,8 +44,18 @@ void Operand::write(Machine& m, PdpWord word) {
     case 2: 
       m.mem().setWord(m.reg(reg_)++, word);
       break;
+    case 3: {
+      PdpWord ptrArrd = m.reg(reg_)++;
+      PdpWord addr = m.mem().getWord(ptrArrd);
+      m.mem().setWord(addr, word);
+      break;
+    }
+    case 4: {
+      m.mem().setWord(--m.reg(reg_), word);
+      break;
+    }
     default:
-      throw std::logic_error("Unsupported mode");
+      throw std::logic_error("Unsupported mode -- Operand::write");
   }
 }
 
@@ -48,16 +66,29 @@ std::string Operand::to_string(Machine& m) const {
       ss << "R" << static_cast<int>(reg_);
       break;
     case 1: case 2: {
-      PdpWord ptr = m.reg(reg_);
       if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
+        PdpWord ptr = m.reg(reg_);
         ss << "#" << std::oct << m.mem().getWord(ptr).intValue();
       } else { // Если другой регистр, то его номер в скобках.
         ss << "(R" << static_cast<int>(reg_) << ")";
       }
       break;
     }
+    case 3: {
+      if (reg_ == 7) {
+        PdpWord ptr = m.reg(reg_);
+        ss << "@#" << std::oct << m.mem().getWord(ptr).intValue();
+      } else {
+        ss << "@(R" << static_cast<int>(reg_) << ")";
+      }
+      break;
+    }
+    case 4: {
+      ss << "-(R" << static_cast<int>(reg_) << ")";
+      break;
+    }
     default:
-      throw std::logic_error("Unsopported mode");      
+      throw std::logic_error("Unsupported mode -- Operand::to_strig");      
   }
   return ss.str();
 }
