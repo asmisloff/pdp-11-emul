@@ -2,6 +2,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <iostream>
+#include <iomanip>
 
 #include "../Memory.h"
 

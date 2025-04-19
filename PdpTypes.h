@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <iostream>
 #include <iomanip>
 
 #ifndef PDP_TYPES_H
@@ -11,33 +12,29 @@ typedef uint16_t PdpAddr;
 
 class PdpWord {
  public:
-  PdpWord(uint16_t w) { word = swapBytes(w); }
+  PdpWord(uint16_t w) : lo_{uint8_t(w)}, hi_{uint8_t(w >> 8)}
+  {}
 
-  PdpWord(PdpByte low, PdpByte high) {
-    word = low;
-    word <<= PDP_BYTE_SIZE;
-    word |= high;
-  }
+  PdpWord(PdpByte low, PdpByte high) : lo_(low), hi_(high)
+  {}
 
-  bool operator==(const PdpWord &other) const { return word == other.word; }
-  bool operator!=(const PdpWord &other) const { return word != other.word; }
-  PdpByte low() const { return word >> PDP_BYTE_SIZE; }
-  PdpByte high() const { return (PdpByte)word; }
-  uint16_t intValue() const { return swapBytes(word); }
+  bool operator==(const PdpWord &other) const { return lo_ == other.lo_ && hi_ == other.hi_; }
+  bool operator!=(const PdpWord &other) const { return !(*this == other); }
+  PdpByte low() const { return lo_; }
+  PdpByte high() const { return hi_; }
+  uint16_t intValue() const { return (uint16_t(hi_) << 8) | uint16_t(lo_); }
   PdpWord operator+(const PdpWord &other) const { return PdpWord(intValue() + other.intValue()); }
   PdpWord operator-(const PdpWord &other) const { return PdpWord(intValue() - other.intValue()); }
-  void operator+=(int amount) { word = swapBytes(swapBytes(word) + amount); }
-  void operator-=(int amount) { word = swapBytes(swapBytes(word) - amount); }
+  void operator+=(int amount) { assign(intValue() + amount); }
+  void operator-=(int amount) { assign(intValue() - amount); }
   PdpWord operator++(int);
   PdpWord& operator--();
   operator PdpAddr() const { return intValue(); }
 
  private:
-  uint16_t word;
-
-  uint16_t swapBytes(uint16_t w) const {
-    return (w >> PDP_BYTE_SIZE) | (w << PDP_BYTE_SIZE);
-  }
+  uint8_t lo_;
+  uint8_t hi_;
+  void assign(uint16_t word) { lo_ = uint8_t(word), hi_ = uint8_t(word >> 8); }
 };
 
 inline std::ostream& operator<<(std::ostream &out, const PdpWord &word) {
