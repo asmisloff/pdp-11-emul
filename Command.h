@@ -27,11 +27,24 @@ class AddCommand : public Command {
   void exec(int opcode, Machine& m) const override;
 };
 
+class SobCommand : public Command {
+  const std::string& name() const override;
+  bool match(int opcode) const override;
+  void exec(int opcode, Machine& m) const override;
+};
+
 class HaltCommand : public Command {
  public:
   const std::string& name() const override;
   bool match(int opcode) const override;
   void exec(int opcode, Machine& m) const override;
+};
+
+class ClrCommand : public Command {
+  public:
+    const std::string& name() const override;
+    bool match(int opcode) const override;
+    void exec(int opcode, Machine& m) const override;
 };
 
 #endif

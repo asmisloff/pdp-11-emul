@@ -76,12 +76,21 @@ std::string Operand::to_string(Machine& m) const {
     case 0:
       ss << "R" << static_cast<int>(reg_);
       break;
-    case 1: case 2: {
+    case 1: {
       if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
         PdpWord ptr = m.reg(reg_);
         ss << "#" << std::oct << m.mem().getWord(ptr).intValue();
       } else { // Если другой регистр, то его номер в скобках.
         ss << "(R" << static_cast<int>(reg_) << ")";
+      }
+      break;
+    }
+    case 2: {
+      if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
+        PdpWord ptr = m.reg(reg_);
+        ss << "#" << std::oct << m.mem().getWord(ptr).intValue();
+      } else { // Если другой регистр, то его номер в скобках.
+        ss << "(R" << static_cast<int>(reg_) << ")+";
       }
       break;
     }

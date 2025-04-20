@@ -26,7 +26,9 @@ class Machine {
   PdpWord regs[8];
   static const AddCommand ADD;
   static const MovCommand MOV;
+  static const SobCommand SOB;
   static const HaltCommand HALT;
+  static const ClrCommand CLR;
 };
 
 #endif

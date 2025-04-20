@@ -10,12 +10,16 @@
 
 const AddCommand  Machine::ADD;
 const MovCommand  Machine::MOV;
+const SobCommand  Machine::SOB;
 const HaltCommand Machine::HALT;
+const ClrCommand  Machine::CLR;
 
 const std::vector<const Command*> Machine::commands = {
   &Machine::ADD, 
   &Machine::MOV,
-  &Machine::HALT
+  &Machine::SOB,
+  &Machine::HALT,
+  &Machine::CLR
 };
 
 Machine::Machine() 
@@ -47,6 +51,9 @@ void Machine::run(std::istream& is) {
     logger().debug() << pc() << ' ' << std::oct << PdpWord(opcode) << '\n';
     pc()++;
     cmd = getCommand(opcode);
+    if (cmd == nullptr) {
+      throw std::invalid_argument("invalid opcode: " + std::to_string(opcode));
+    }
     cmd->exec(opcode, *this);
   } while (cmd != &HALT);
   if (logger_.level == Logger::Level::DEBUG) {

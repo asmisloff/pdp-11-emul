@@ -27,7 +27,9 @@ void testMachineCommands() {
   auto commands = m.commands;
   assert(commands[0]->name() == "ADD");
   assert(commands[1]->name() == "MOV");
-  assert(commands[2]->name() == "HALT");
+  assert(commands[2]->name() == "SOB");
+  assert(commands[3]->name() == "HALT");
+  assert(commands[4]->name() == "CLR");
   std::cout << "PASSED\n";
 }
 
@@ -54,8 +56,8 @@ void test_e2e_cases() {
     "01_sum_mode1",
     "01_sum_mode1_big",
     "01_sum_neg",
+    "02_sob"
   };
-
   for (size_t i = 0; i < names.size(); ++i) {
     std::cout << names[i] << ": ";
     std::ifstream fs("./e2e/" + names[i] + "/" + names[i] + ".pdp.o");
