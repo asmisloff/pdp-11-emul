@@ -21,12 +21,17 @@ PdpWord Operand::read(Machine& m) {
     case 2:
       return m.mem().getWord(m.reg(reg_)++);
     case 3: {
-      PdpWord ptrArrd = m.reg(reg_)++;
-      PdpWord addr = m.mem().getWord(ptrArrd);
+      PdpWord addrOfAddr = m.reg(reg_)++;
+      PdpWord addr = m.mem().getWord(addrOfAddr);
       return m.mem().getWord(addr);
     }
     case 4: {
       return m.mem().getWord(--m.reg(reg_));
+    }
+    case 5: {
+      PdpWord addrOfAddr = --m.reg(reg_);
+      PdpWord addr = m.mem().getWord(addrOfAddr);
+      return m.mem().getWord(addr);
     }
     default:
       throw std::logic_error("Unsupported mode -- Operand::read");
@@ -45,13 +50,19 @@ void Operand::write(Machine& m, PdpWord word) {
       m.mem().setWord(m.reg(reg_)++, word);
       break;
     case 3: {
-      PdpWord ptrArrd = m.reg(reg_)++;
-      PdpWord addr = m.mem().getWord(ptrArrd);
+      PdpWord addrOfAddr = m.reg(reg_)++;
+      PdpWord addr = m.mem().getWord(addrOfAddr);
       m.mem().setWord(addr, word);
       break;
     }
     case 4: {
       m.mem().setWord(--m.reg(reg_), word);
+      break;
+    }
+    case 5: {
+      PdpWord ptrArrd = --m.reg(reg_);
+      PdpWord addr = m.mem().getWord(ptrArrd);
+      m.mem().setWord(addr, word);
       break;
     }
     default:
@@ -87,8 +98,12 @@ std::string Operand::to_string(Machine& m) const {
       ss << "-(R" << static_cast<int>(reg_) << ")";
       break;
     }
+    case 5: {
+      ss << "@-(R" << static_cast<int>(reg_) << ")";
+      break;
+    }
     default:
-      throw std::logic_error("Unsupported mode -- Operand::to_strig");      
+      throw std::logic_error("Unsupported mode -- Operand::to_string");      
   }
   return ss.str();
 }
