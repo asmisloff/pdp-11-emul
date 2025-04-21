@@ -22,6 +22,9 @@ void testFromByte() {
   word = PdpWord::fromByte(-13);
   assert(word.low() == uint8_t(-13));
   assert(word.high() == 0xFF);
+  word = PdpWord::fromByte(255);
+  assert(int8_t(word.low()) == -1);
+  assert(word.high() == 0xFF);
   std::cout << "PASSED\n";
 }
 

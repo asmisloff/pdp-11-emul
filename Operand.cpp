@@ -38,6 +38,23 @@ PdpWord Operand::read(Machine& m) {
   }
 }
 
+PdpWord Operand::readb(Machine& m) {
+  if (reg_ == 6 || reg_ == 7) {
+    return read(m);
+  }
+  if (mode_ == 2) {
+    PdpWord addr = m.reg(reg_);
+    m.reg(reg_) += 1;
+    return PdpWord::fromByte(m.mem().getByte(addr));
+  }
+  if (mode_ == 4) {
+    PdpWord& addr = m.reg(reg_);
+    addr -= 1;
+    return PdpWord::fromByte(m.mem().getByte(addr));
+  }
+  return PdpWord::fromByte(read(m).low());
+}
+
 void Operand::write(Machine& m, PdpWord word) {
   switch (mode_) {
     case 0: 
@@ -67,6 +84,22 @@ void Operand::write(Machine& m, PdpWord word) {
     }
     default:
       throw std::logic_error("Unsupported mode -- Operand::write");
+  }
+}
+
+void Operand::writeb(Machine& m, PdpByte byte) {
+  if (reg_ == 6 || reg_ == 7) {
+    write(m, PdpWord::fromByte(byte));
+  } else if (mode_ == 2) {
+    PdpWord addr = m.reg(reg_);
+    m.reg(reg_) += 1;
+    m.mem().setByte(addr, byte);
+  } else if (mode_ == 4) {
+    PdpWord& addr = m.reg(reg_);
+    addr -= 1;
+    m.mem().setByte(addr, byte);
+  } else {
+    throw std::logic_error("Unsupported mode -- Operand::writeb");
   }
 }
 

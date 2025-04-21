@@ -11,7 +11,9 @@ class Operand {
   int reg() const { return reg_; }
   std::string to_string(Machine& m) const;
   PdpWord read(Machine& m);
+  PdpWord readb(Machine& m);
   void write(Machine& m, PdpWord word);
+  void writeb(Machine& m, PdpByte byte);
 
  private:
   Operand();
