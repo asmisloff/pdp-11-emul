@@ -18,6 +18,11 @@ class PdpWord {
   PdpWord(PdpByte low, PdpByte high) : lo_(low), hi_(high)
   {}
 
+  static PdpWord fromByte(int8_t lo) {
+    PdpByte hi = lo < 0 ? 0xff : 0;
+    return PdpWord(lo, hi);
+  }
+
   bool operator==(const PdpWord &other) const { return lo_ == other.lo_ && hi_ == other.hi_; }
   bool operator!=(const PdpWord &other) const { return !(*this == other); }
   PdpByte low() const { return lo_; }
