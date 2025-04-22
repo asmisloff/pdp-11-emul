@@ -1,10 +1,12 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "./PdpTypes.h"
 #include <string>
 
+#include "./PdpTypes.h"
+
 class Machine;
+class Operand;
 
 class Command {
  public:
@@ -15,6 +17,14 @@ class Command {
 
 class MovCommand : public Command {
  public:
+  const std::string& name() const override;
+  bool match(int opcode) const override;
+  void exec(int opcode, Machine& m) const override;
+ protected:
+  std::pair<Operand, Operand> getOperands(int opcode, Machine& m) const;
+};
+
+class MovbCommand : public MovCommand {
   const std::string& name() const override;
   bool match(int opcode) const override;
   void exec(int opcode, Machine& m) const override;

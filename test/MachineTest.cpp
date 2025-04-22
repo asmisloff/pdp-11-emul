@@ -25,11 +25,11 @@ void testMachineCommands() {
   std::cout << "Machine commands: ";
   Machine m;
   auto commands = m.commands;
-  assert(commands[0]->name() == "ADD");
-  assert(commands[1]->name() == "MOV");
-  assert(commands[2]->name() == "SOB");
-  assert(commands[3]->name() == "HALT");
-  assert(commands[4]->name() == "CLR");
+  std::vector<std::string> expected = {"ADD", "MOV", "MOVb", "SOB", "HALT", "CLR"};
+  assert(commands.size() == expected.size());
+  for (size_t i = 0; i < commands.size(); ++i) {
+    assert(commands[i]->name() == expected[i]);
+  }
   std::cout << "PASSED\n";
 }
 
@@ -57,7 +57,8 @@ void test_e2e_cases() {
     "01_sum_mode1_big",
     "01_sum_neg",
     "02_sob",
-    "02_sob_byte"
+    "02_sob_byte",
+    "02_sob_mode3"
   };
   for (size_t i = 0; i < names.size(); ++i) {
     std::cout << names[i] << ": ";

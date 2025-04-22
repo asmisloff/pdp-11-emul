@@ -8,18 +8,15 @@
 #include "./Operand.h"
 #include "Machine.h"
 
-const AddCommand  Machine::ADD;
-const MovCommand  Machine::MOV;
-const SobCommand  Machine::SOB;
-const HaltCommand Machine::HALT;
-const ClrCommand  Machine::CLR;
+static const AddCommand  ADD;
+static const MovCommand  MOV;
+static const MovbCommand  MOVb;
+static const SobCommand  SOB;
+static const HaltCommand HALT;
+static const ClrCommand  CLR;
 
 const std::vector<const Command*> Machine::commands = {
-  &Machine::ADD, 
-  &Machine::MOV,
-  &Machine::SOB,
-  &Machine::HALT,
-  &Machine::CLR
+  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR
 };
 
 Machine::Machine() 
