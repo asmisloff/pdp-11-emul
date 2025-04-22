@@ -56,7 +56,8 @@ void test_e2e_cases() {
     "01_sum_mode1",
     "01_sum_mode1_big",
     "01_sum_neg",
-    "02_sob"
+    "02_sob",
+    "02_sob_byte"
   };
   for (size_t i = 0; i < names.size(); ++i) {
     std::cout << names[i] << ": ";

@@ -10,8 +10,9 @@ static const std::string SOB = "SOB";
 static const std::string CLR = "CLR";
 
 const std::string& MovCommand::name() const { return MOV; }
-bool MovCommand::match(int opcode) const { return (0170000 & opcode) == 010000; }
+bool MovCommand::match(int opcode) const { return (0070000 & opcode) == 0010000; }
 void MovCommand::exec(int opcode, Machine& m) const {
+  bool byteMode = (0100000 & opcode);
   Operand ss = Operand::SS(opcode);
   Operand dd = Operand::DD(opcode);
   Logger& logger = m.logger();
@@ -21,8 +22,8 @@ void MovCommand::exec(int opcode, Machine& m) const {
     std::string dd_str = dd.to_string(m);
     logger.debug() << cmd_name << ' ' << ss_str.c_str() << ' ' << dd_str.c_str() << '\n';
   }
-  PdpWord value = ss.read(m);
-  dd.write(m, value);
+  PdpWord value = byteMode ? ss.readb(m) : ss.read(m);
+  byteMode ? dd.writeb(m, value.low()) : dd.write(m, value);
 }
 
 const std::string& AddCommand::name() const { return ADD; }

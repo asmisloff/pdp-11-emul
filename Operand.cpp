@@ -39,7 +39,7 @@ PdpWord Operand::read(Machine& m) {
 }
 
 PdpWord Operand::readb(Machine& m) {
-  if (reg_ == 6 || reg_ == 7) {
+  if (reg_ > 5) {
     return read(m);
   }
   if (mode_ == 2) {
@@ -88,18 +88,41 @@ void Operand::write(Machine& m, PdpWord word) {
 }
 
 void Operand::writeb(Machine& m, PdpByte byte) {
-  if (reg_ == 6 || reg_ == 7) {
-    write(m, PdpWord::fromByte(byte));
-  } else if (mode_ == 2) {
-    PdpWord addr = m.reg(reg_);
-    m.reg(reg_) += 1;
-    m.mem().setByte(addr, byte);
-  } else if (mode_ == 4) {
-    PdpWord& addr = m.reg(reg_);
-    addr -= 1;
-    m.mem().setByte(addr, byte);
-  } else {
-    throw std::logic_error("Unsupported mode -- Operand::writeb");
+  if (reg_ > 5 || mode_ == 0) {
+    return write(m, PdpWord::fromByte(byte));
+  }
+  switch (mode_) {
+    case 1: {
+      m.mem().setByte(m.reg(reg_), byte);
+      break;
+    }
+    case 2: {
+      PdpWord addr = m.reg(reg_);
+      m.reg(reg_) += 1;
+      m.mem().setByte(addr, byte);
+      break;
+    }
+    case 3: {
+      PdpWord addrOfAddr = m.reg(reg_)++;
+      PdpWord addr = m.mem().getWord(addrOfAddr);
+      m.mem().setByte(addr, byte);
+      break;
+    }
+    case 4: {
+      PdpWord& addr = m.reg(reg_);
+      addr -= 1;
+      m.mem().setByte(addr, byte);
+      break;
+    }
+    case 5: {
+      PdpWord ptrArrd = --m.reg(reg_);
+      PdpWord addr = m.mem().getWord(ptrArrd);
+      m.mem().setByte(addr, byte);
+      break;
+    }
+    default: {
+      throw std::logic_error("Operand::writeb -- Unsupported mode: " + std::to_string(mode_));
+    }
   }
 }
 
