@@ -9,6 +9,12 @@
 #include "./Logger.h"
 #include "./Command.h"
 
+struct PSW {
+  bool zeroBit = false;
+  bool negBit = false;
+  bool carryBit = false;
+};
+
 class Machine {
  public:
   Machine();
@@ -17,9 +23,10 @@ class Machine {
   Logger& logger() { return logger_; }
   Memory& mem() { return mem_; }
   PdpWord& reg(int index) { return regs[index]; }
+  PSW psw;
   static const std::vector<const Command*> commands;
-
- private:
+  
+  private:
   Memory mem_;
   Loader loader_;
   Logger logger_;
