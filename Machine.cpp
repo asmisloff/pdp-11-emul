@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <string>
 
-#include "./Machine.h"
-#include "./Loader.h"
-#include "./PdpTypes.h"
-#include "./Command.h"
-#include "./Operand.h"
 #include "Machine.h"
+#include "Loader.h"
+#include "PdpTypes.h"
+#include "Operand.h"
+#include "Machine.h"
+#include "commands/all.h"
 
 static const AddCommand  ADD;
 static const MovCommand  MOV;

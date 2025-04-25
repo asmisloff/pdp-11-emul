@@ -4,10 +4,10 @@
 #include <istream>
 #include <memory>
 
-#include "./Loader.h"
-#include "./Memory.h"
-#include "./Logger.h"
-#include "./Command.h"
+#include "Loader.h"
+#include "Memory.h"
+#include "Logger.h"
+#include "commands/Command.h"
 
 struct PSW {
   bool zeroBit = false;

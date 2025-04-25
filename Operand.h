@@ -9,7 +9,7 @@ class Operand {
   static Operand DD(int opcode);
   int mode() const { return mode_; }
   int reg() const { return reg_; }
-  std::string to_string(Machine& m) const;
+  std::string toStr(Machine& m) const;
   PdpWord read(Machine& m);
   PdpWord readb(Machine& m);
   void write(Machine& m, PdpWord word);

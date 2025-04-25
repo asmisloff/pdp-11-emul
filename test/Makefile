@@ -15,10 +15,10 @@ Logger:
 	./run_test.sh Logger
 
 Operand:
-	./run_test.sh Operand "../Operand.cpp ../Machine.cpp../Loader.cpp ../Memory.cpp ../Command.cpp"
+	./run_test.sh Operand "../Operand.cpp ../Machine.cpp../Loader.cpp ../Memory.cpp"
 
 Command:
-	./run_test.sh Command "../Command.cpp ../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp"
+	./run_test.sh Command "../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp ../commands/*.cpp"
 
 Machine:
-	./run_test.sh Machine "../Command.cpp ../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp"
+	./run_test.sh Machine "../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp ../commands/*.cpp "

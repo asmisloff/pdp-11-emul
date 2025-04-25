@@ -126,7 +126,7 @@ void Operand::writeb(Machine& m, PdpByte byte) {
   }
 }
 
-std::string Operand::to_string(Machine& m) const {
+std::string Operand::toStr(Machine& m) const {
   std::stringstream ss;
   switch (mode_) {
     case 0:

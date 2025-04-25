@@ -1,0 +1,7 @@
+#include "Command.h"
+#include "MovCommand.h"
+#include "MovbCommand.h"
+#include "AddCommand.h"
+#include "SobCommand.h"
+#include "ClrCommand.h"
+#include "HaltCommand.h"
