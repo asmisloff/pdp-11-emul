@@ -25,7 +25,7 @@ void testMachineCommands() {
   std::cout << "Machine commands: ";
   Machine m;
   auto commands = m.commands;
-  std::vector<std::string> expected = {"ADD", "MOV", "MOVb", "SOB", "HALT", "CLR"};
+  std::vector<std::string> expected = {"ADD", "MOV", "MOVb", "SOB", "HALT", "CLR", "BR", "BEQ"};
   assert(commands.size() == expected.size());
   for (size_t i = 0; i < commands.size(); ++i) {
     assert(commands[i]->name() == expected[i]);
@@ -58,7 +58,8 @@ void test_e2e_cases() {
     "01_sum_neg",
     "02_sob",
     "02_sob_byte",
-    "02_sob_mode3"
+    "02_sob_mode3",
+    "03_arr0"
   };
   for (size_t i = 0; i < names.size(); ++i) {
     std::cout << names[i] << ": ";
@@ -84,7 +85,7 @@ void test_04_mode4() {
   } catch (std::out_of_range& e) {
     assert(strcmp(e.what(), "Illegal address: 0") == 0);
     for (PdpAddr addr = 02; addr < 01000; addr += 02) {
-      assert(m.mem().getWord(addr).intValue() == 0014747);
+      assert(m.mem().getWord(addr).toUnsigned() == 0014747);
     }
     std::cout << "PASSED\n";
   }

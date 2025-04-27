@@ -13,5 +13,8 @@ bool MovbCommand::match(int opcode) const {
 void MovbCommand::exec(int opcode, Machine& m) const {
     auto [ss, dd] = getOperands(opcode, m);
     PdpWord value = ss.readb(m);
-    dd.writeb(m, value.low());
+    PdpByte byte = value.low();
+    dd.writeb(m, byte);
+    m.psw.zeroBit = (byte == 0);
+    m.psw.negBit = (int8_t(byte) < 0);
 }

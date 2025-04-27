@@ -11,6 +11,9 @@ bool MovCommand::match(int opcode) const {
 void MovCommand::exec(int opcode, Machine& m) const {
     auto [ss, dd] = getOperands(opcode, m);
     PdpWord value = ss.read(m);
+    int16_t sv = value.toSigned();
+    m.psw.negBit = (sv < 0);
+    m.psw.zeroBit = (sv == 0);
     dd.write(m, value);
 }
 

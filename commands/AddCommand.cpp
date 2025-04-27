@@ -20,5 +20,8 @@ void AddCommand::exec(int opcode, Machine& m) const {
   }
   PdpWord v1 = ss.read(m);
   PdpWord v2 = dd.read(m);
-  dd.write(m, v1 + v2);
+  PdpWord sum = v1 + v2;
+  int ref = v1.toSigned() + v2.toSigned();
+  m.psw = { .zeroBit = (sum == 0), .negBit = (sum.toSigned() < 0), .carryBit = (ref > 0xffff) };
+  dd.write(m, sum);
 }

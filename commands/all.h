@@ -5,3 +5,5 @@
 #include "SobCommand.h"
 #include "ClrCommand.h"
 #include "HaltCommand.h"
+#include "BrCommand.h"
+#include "BeqCommand.h"

@@ -135,7 +135,7 @@ std::string Operand::toStr(Machine& m) const {
     case 1: {
       if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
         PdpWord ptr = m.reg(reg_);
-        ss << "#" << std::oct << m.mem().getWord(ptr).intValue();
+        ss << "#" << std::oct << m.mem().getWord(ptr).toUnsigned();
       } else { // Если другой регистр, то его номер в скобках.
         ss << "(R" << static_cast<int>(reg_) << ")";
       }
@@ -144,7 +144,7 @@ std::string Operand::toStr(Machine& m) const {
     case 2: {
       if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
         PdpWord ptr = m.reg(reg_);
-        ss << "#" << std::oct << m.mem().getWord(ptr).intValue();
+        ss << "#" << std::oct << m.mem().getWord(ptr).toUnsigned();
       } else { // Если другой регистр, то его номер в скобках.
         ss << "(R" << static_cast<int>(reg_) << ")+";
       }
@@ -153,7 +153,7 @@ std::string Operand::toStr(Machine& m) const {
     case 3: {
       if (reg_ == 7) {
         PdpWord ptr = m.reg(reg_);
-        ss << "@#" << std::oct << m.mem().getWord(ptr).intValue();
+        ss << "@#" << std::oct << m.mem().getWord(ptr).toUnsigned();
       } else {
         ss << "@(R" << static_cast<int>(reg_) << ")";
       }

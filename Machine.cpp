@@ -14,9 +14,11 @@ static const MovbCommand  MOVb;
 static const SobCommand  SOB;
 static const HaltCommand HALT;
 static const ClrCommand  CLR;
+static const BrCommand BR;
+static const BeqCommand BEQ;
 
 const std::vector<const Command*> Machine::commands = {
-  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR
+  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ
 };
 
 Machine::Machine() 
@@ -55,8 +57,8 @@ void Machine::run(std::istream& is) {
   } while (cmd != &HALT);
   if (logger_.level == Logger::Level::DEBUG) {
     for (int i = 0; i < 7; i++) {
-      logger().debug() << 'R' << i << ':' << std::oct << regs[i].intValue() << ' ';
+      logger().debug() << 'R' << i << ':' << std::oct << regs[i].toUnsigned() << ' ';
     }
-    logger().debug() << 'R' << 7 << ':' << std::oct << regs[7].intValue() << '\n';
+    logger().debug() << 'R' << 7 << ':' << std::oct << regs[7].toUnsigned() << '\n';
   }
 }

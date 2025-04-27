@@ -28,8 +28,8 @@ PdpByte Memory::getByte(PdpAddr addr) const {
   return mem[addr];
 }
 
-void Memory::setByte(PdpAddr addr, PdpByte byte) { 
-  mem[addr] = byte; 
+void Memory::setByte(PdpAddr addr, PdpByte byte) {
+  mem[addr] = byte;
 }
 
 void Memory::checkWordAddr(PdpAddr addr) const {
@@ -47,7 +47,7 @@ void Memory::fill(PdpByte val, PdpAddr begin, PdpAddr end) {
 
 void Memory::dump(PdpAddr begin, PdpAddr end, std::ostream &out) {
   for (; begin < end; begin += 2) {
-    int val = getWord(begin).intValue();
+    int val = getWord(begin).toUnsigned();
     out << std::oct << std::setw(6) << std::setfill('0') << begin << ": "
         << std::oct << std::setw(6) << std::setfill('0') << val << ' '
         << std::hex << std::setw(4) << std::setfill('0') << val << '\n';

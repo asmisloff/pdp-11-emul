@@ -17,11 +17,11 @@ void SobCommand::exec(int opcode, Machine& m) const {
   PdpWord& reg = m.reg(regIndex);
   int offset = (opcode & 0000077) * 2;
   reg -= 1;
-  if (reg.intValue() > 0) {
+  if (reg.toUnsigned() > 0) {
     m.pc() -= offset;
   }
   if (m.logger().level >= Logger::Level::DEBUG) {
     m.logger().debug() << name().c_str() << ' ' << 'R' << regIndex << ' '
-                       << PdpWord(m.pc().intValue() - offset) << '\n';
+                       << PdpWord(m.pc().toUnsigned() - offset) << '\n';
   }
 }
