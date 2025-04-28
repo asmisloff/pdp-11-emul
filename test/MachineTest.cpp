@@ -42,9 +42,9 @@ void testEmptyProgram() {
      << "0\n"
      << "0\n";
   m.run(ss);
-  std::string expected =  "001000 000000\n"
-                          "HALT\n"
-                          "R0:0 R1:0 R2:0 R3:0 R4:0 R5:0 R6:0 R7:1002\n";
+  std::string expected =  "001000: HALT\n"
+                          "R0:0 R1:0 R2:0 R3:0 R4:0 R5:0 R6:0 R7:1002\n"
+                          "Z:0 N:0 C:0\n";
   std::string actual = fromLoggerStringStream(m);
   assert(expected.compare(actual) == 0);
   std::cout << "PASSED\n";
@@ -59,7 +59,8 @@ void test_e2e_cases() {
     "02_sob",
     "02_sob_byte",
     "02_sob_mode3",
-    "03_arr0"
+    "03_arr0",
+    "03_arr0_byte"
   };
   for (size_t i = 0; i < names.size(); ++i) {
     std::cout << names[i] << ": ";
