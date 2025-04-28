@@ -13,12 +13,9 @@ bool ClrCommand::match(int opcode) const {
 
 void ClrCommand::exec(int opcode, Machine& m) const {
     Operand dd = Operand::DD(opcode);
-    Logger& logger = m.logger();
-    if (logger.level >= Logger::Level::DEBUG) {
-        const char* cmd_name = name().c_str();
-        std::string dd_str = dd.toStr(m);
-        logger.debug() << cmd_name << ' ' << dd_str.c_str() << '\n';
-    }
+    m.logger().debug([this, &m, &dd](Logger::OStreamWrapper& w) {
+        w << name() << ' ' << dd.toStr(m) << '\n';
+    });
     dd.write(m, 0);
     m.psw = { .zeroBit = 1, .negBit = 0, .carryBit = 0 };
 }

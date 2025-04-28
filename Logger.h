@@ -27,6 +27,7 @@ class Logger {
     OStreamWrapper& trace() { return trace_; }
     OStreamWrapper& info()  { return info_;  }
     OStreamWrapper& debug() { return debug_; }
+    template<class F> void debug(F f) { if (level >= this->level) f(debug_); }
 
   private:
     OStreamWrapper error_;

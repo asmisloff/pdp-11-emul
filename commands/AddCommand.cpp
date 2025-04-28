@@ -14,10 +14,9 @@ bool AddCommand::match(int opcode) const {
 void AddCommand::exec(int opcode, Machine& m) const {
   Operand ss = Operand::SS(opcode);
   Operand dd = Operand::DD(opcode);
-  Logger& logger = m.logger();
-  if (logger.level >= Logger::Level::DEBUG) {
-    logger.debug() << name() << ' ' << ss.toStr(m) << ' ' << dd.toStr(m) << '\n';
-  }
+  m.logger().debug([this, &ss, &dd, &m](Logger::OStreamWrapper& w) {
+    w << name() << ' ' << ss.toStr(m) << ' ' << dd.toStr(m) << '\n';
+  });
   PdpWord v1 = ss.read(m);
   PdpWord v2 = dd.read(m);
   PdpWord sum = v1 + v2;

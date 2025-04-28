@@ -55,10 +55,10 @@ void Machine::run(std::istream& is) {
     }
     cmd->exec(opcode, *this);
   } while (cmd != &HALT);
-  if (logger_.level == Logger::Level::DEBUG) {
+  logger().debug([this](Logger::OStreamWrapper& w) {
     for (int i = 0; i < 7; i++) {
-      logger().debug() << 'R' << i << ':' << std::oct << regs[i].toUnsigned() << ' ';
+      w << 'R' << i << ':' << std::oct << regs[i].toUnsigned() << ' ';
     }
-    logger().debug() << 'R' << 7 << ':' << std::oct << regs[7].toUnsigned() << '\n';
-  }
+    w << 'R' << 7 << ':' << std::oct << regs[7].toUnsigned() << '\n';
+  });
 }

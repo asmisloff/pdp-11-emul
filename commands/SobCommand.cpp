@@ -20,8 +20,7 @@ void SobCommand::exec(int opcode, Machine& m) const {
   if (reg.toUnsigned() > 0) {
     m.pc() -= offset;
   }
-  if (m.logger().level >= Logger::Level::DEBUG) {
-    m.logger().debug() << name().c_str() << ' ' << 'R' << regIndex << ' '
-                       << PdpWord(m.pc().toUnsigned() - offset) << '\n';
-  }
+  m.logger().debug([this, &regIndex, &m, &offset](Logger::OStreamWrapper& w) {
+    w << name() << ' ' << 'R' << regIndex << ' ' << PdpWord(m.pc().toUnsigned() - offset) << '\n';
+  });
 }

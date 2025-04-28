@@ -13,5 +13,5 @@ bool HaltCommand::match(int opcode) const {
 
 void HaltCommand::exec(int opcode, Machine& m) const {
     (void)opcode;
-    m.logger().debug() << name().c_str() << '\n';
+    m.logger().debug() << name() << '\n';
 }
