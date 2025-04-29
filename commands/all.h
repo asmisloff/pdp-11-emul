@@ -7,3 +7,5 @@
 #include "HaltCommand.h"
 #include "BrCommand.h"
 #include "BeqCommand.h"
+#include "TestbCommand.h"
+#include "BplCommand.h"
