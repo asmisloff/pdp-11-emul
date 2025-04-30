@@ -22,7 +22,7 @@ class Logger {
     };
 
     explicit Logger();
-    Level level = Level::ERROR;
+    Level level = Level::INFO;
     OStreamWrapper& error() { return error_; }
     OStreamWrapper& trace() { return trace_; }
     OStreamWrapper& info()  { return info_;  }
@@ -63,6 +63,14 @@ inline Logger::OStreamWrapper& operator<<(Logger::OStreamWrapper& w, T arg) {
   std::ostream* s = w.stream();
   if (s != nullptr) {
     *s << arg;
+  }
+  return w;
+}
+
+inline Logger::OStreamWrapper& operator<<(Logger::OStreamWrapper& w, std::ostream& (*manipulator)(std::ostream&)) {
+  std::ostream* s = w.stream();
+  if (s != nullptr) {
+    *s << manipulator;
   }
   return w;
 }

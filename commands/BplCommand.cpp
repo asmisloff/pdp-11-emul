@@ -12,7 +12,7 @@ bool BplCommand::match(int opcode) const {
 }
 
 void BplCommand::exec(int opcode, Machine &m) const {
-    if (m.psw.negBit) {
+    if (!m.psw.negBit) {
         m.pc() += 2 * char(opcode);
     }
     m.logger().debug([this, &m](Logger::OStreamWrapper& w) {

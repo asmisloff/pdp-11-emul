@@ -1,4 +1,4 @@
-.PHONY: all PdpWord Memory Loader Logger Command Machine
+.PHONY: all PdpWord Memory Loader Logger Command Machine Monitor
 
 all: PdpWord Memory Loader Command Machine
 
@@ -18,7 +18,10 @@ Operand:
 	./run_test.sh Operand "../Operand.cpp ../Machine.cpp../Loader.cpp ../Memory.cpp"
 
 Command:
-	./run_test.sh Command "../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp ../commands/*.cpp"
+	./run_test.sh Command "../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp ../commands/*.cpp ../devices/*.cpp"
 
 Machine:
-	./run_test.sh Machine "../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp ../commands/*.cpp "
+	./run_test.sh Machine "../Machine.cpp ../Loader.cpp ../Memory.cpp ../Operand.cpp ../commands/*.cpp ../devices/*.cpp"
+
+Monitor:
+	./run_test.sh Monitor "../devices/Monitor.cpp ../Memory.cpp"

@@ -17,21 +17,21 @@ PdpWord Operand::read(Machine& m) {
     case 0:
       return m.reg(reg_);
     case 1:
-      return m.mem().getWord(m.reg(reg_));
+      return m.getWord(m.reg(reg_));
     case 2:
-      return m.mem().getWord(m.reg(reg_)++);
+      return m.getWord(m.reg(reg_)++);
     case 3: {
       PdpWord addrOfAddr = m.reg(reg_)++;
-      PdpWord addr = m.mem().getWord(addrOfAddr);
-      return m.mem().getWord(addr);
+      PdpWord addr = m.getWord(addrOfAddr);
+      return m.getWord(addr);
     }
     case 4: {
-      return m.mem().getWord(--m.reg(reg_));
+      return m.getWord(--m.reg(reg_));
     }
     case 5: {
       PdpWord addrOfAddr = --m.reg(reg_);
-      PdpWord addr = m.mem().getWord(addrOfAddr);
-      return m.mem().getWord(addr);
+      PdpWord addr = m.getWord(addrOfAddr);
+      return m.getWord(addr);
     }
     default:
       throw std::logic_error("Unsupported mode -- Operand::read");
@@ -45,12 +45,12 @@ PdpWord Operand::readb(Machine& m) {
   if (mode_ == 2) {
     PdpWord addr = m.reg(reg_);
     m.reg(reg_) += 1;
-    return PdpWord::fromByte(m.mem().getByte(addr));
+    return PdpWord::fromByte(m.getByte(addr));
   }
   if (mode_ == 4) {
     PdpWord& addr = m.reg(reg_);
     addr -= 1;
-    return PdpWord::fromByte(m.mem().getByte(addr));
+    return PdpWord::fromByte(m.getByte(addr));
   }
   return PdpWord::fromByte(read(m).low());
 }
@@ -61,25 +61,25 @@ void Operand::write(Machine& m, PdpWord word) {
       m.reg(reg_) = word;
       break;
     case 1:
-      m.mem().setWord(m.reg(reg_), word);
+      m.setWord(m.reg(reg_), word);
       break;
     case 2: 
-      m.mem().setWord(m.reg(reg_)++, word);
+      m.setWord(m.reg(reg_)++, word);
       break;
     case 3: {
       PdpWord addrOfAddr = m.reg(reg_)++;
-      PdpWord addr = m.mem().getWord(addrOfAddr);
-      m.mem().setWord(addr, word);
+      PdpWord addr = m.getWord(addrOfAddr);
+      m.setWord(addr, word);
       break;
     }
     case 4: {
-      m.mem().setWord(--m.reg(reg_), word);
+      m.setWord(--m.reg(reg_), word);
       break;
     }
     case 5: {
       PdpWord ptrArrd = --m.reg(reg_);
-      PdpWord addr = m.mem().getWord(ptrArrd);
-      m.mem().setWord(addr, word);
+      PdpWord addr = m.getWord(ptrArrd);
+      m.setWord(addr, word);
       break;
     }
     default:
@@ -93,31 +93,31 @@ void Operand::writeb(Machine& m, PdpByte byte) {
   }
   switch (mode_) {
     case 1: {
-      m.mem().setByte(m.reg(reg_), byte);
+      m.setByte(m.reg(reg_), byte);
       break;
     }
     case 2: {
       PdpWord addr = m.reg(reg_);
       m.reg(reg_) += 1;
-      m.mem().setByte(addr, byte);
+      m.setByte(addr, byte);
       break;
     }
     case 3: {
       PdpWord addrOfAddr = m.reg(reg_)++;
-      PdpWord addr = m.mem().getWord(addrOfAddr);
-      m.mem().setByte(addr, byte);
+      PdpWord addr = m.getWord(addrOfAddr);
+      m.setByte(addr, byte);
       break;
     }
     case 4: {
       PdpWord& addr = m.reg(reg_);
       addr -= 1;
-      m.mem().setByte(addr, byte);
+      m.setByte(addr, byte);
       break;
     }
     case 5: {
       PdpWord ptrArrd = --m.reg(reg_);
-      PdpWord addr = m.mem().getWord(ptrArrd);
-      m.mem().setByte(addr, byte);
+      PdpWord addr = m.getWord(ptrArrd);
+      m.setByte(addr, byte);
       break;
     }
     default: {
@@ -135,7 +135,7 @@ std::string Operand::toStr(Machine& m) const {
     case 1: {
       if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
         PdpWord ptr = m.reg(reg_);
-        ss << "#" << std::oct << m.mem().getWord(ptr).toUnsigned();
+        ss << "#" << std::oct << m.getWord(ptr).toUnsigned();
       } else { // Если другой регистр, то его номер в скобках.
         ss << "(R" << static_cast<int>(reg_) << ")";
       }
@@ -144,7 +144,7 @@ std::string Operand::toStr(Machine& m) const {
     case 2: {
       if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
         PdpWord ptr = m.reg(reg_);
-        ss << "#" << std::oct << m.mem().getWord(ptr).toUnsigned();
+        ss << "#" << std::oct << m.getWord(ptr).toUnsigned();
       } else { // Если другой регистр, то его номер в скобках.
         ss << "(R" << static_cast<int>(reg_) << ")+";
       }
@@ -153,7 +153,7 @@ std::string Operand::toStr(Machine& m) const {
     case 3: {
       if (reg_ == 7) {
         PdpWord ptr = m.reg(reg_);
-        ss << "@#" << std::oct << m.mem().getWord(ptr).toUnsigned();
+        ss << "@#" << std::oct << m.getWord(ptr).toUnsigned();
       } else {
         ss << "@(R" << static_cast<int>(reg_) << ")";
       }

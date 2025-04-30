@@ -25,9 +25,6 @@ void Memory::setWord(PdpAddr addr, PdpWord word) {
 }
 
 PdpByte Memory::getByte(PdpAddr addr) const {
-  if (addr == 0177564) { // todo: заглушка. Убрать после добавления устройств.
-    return mem[addr] | 0x80;
-  }
   return mem[addr];
 }
 
