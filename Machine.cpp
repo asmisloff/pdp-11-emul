@@ -81,7 +81,6 @@ const DevicePtr *Machine::findOwningDevice(PdpWord addr) {
     auto owns = [addr](DevicePtr& d) { return d->owns(addr); };
     auto it = std::find_if(devices_.begin(), devices_.end(), owns);
     return it == devices_.end() ? nullptr : &(*it);
-    // return monitor_.owns(addr) ? &monitor_ : nullptr;
 }
 
 void Machine::setByte(PdpAddr addr, PdpByte value) {

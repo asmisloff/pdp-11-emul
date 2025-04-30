@@ -11,8 +11,9 @@ void test() {
         while (char(mem.getByte(STATE_ADDR)) >= 0) {};
         m.enqueue(c);
     }
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(100ms); // Дождаться завершения печати
 }
-
 
 int main() {
     test();

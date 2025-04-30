@@ -101,7 +101,6 @@ void testMonitorCases() {
       {"08_hello", "Hello, world!"}
     };
     for (auto [testName, expected] : testCases) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         std::cout << testName << ": ";
         std::ifstream fs("./e2e/" + testName + "/" + testName + ".pdp.o");
         Machine m;
@@ -109,7 +108,7 @@ void testMonitorCases() {
         m.run(fs);
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Дождаться вывода последнего символа
         auto actual = fromLoggerInfoStream(m);
-        std::cout << actual << '\n';
+        // std::cout << actual << '\n';
         assert(expected == actual);
         std::cout << "PASSED\n";
     }
@@ -117,8 +116,8 @@ void testMonitorCases() {
 
 int main() {
     testEmptyProgram();
-    // test_e2e_cases();
-    // test_04_mode4();
-    // testMonitorCases();
+    test_e2e_cases();
+    test_04_mode4();
+    testMonitorCases();
     return 0;
 }

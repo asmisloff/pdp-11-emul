@@ -32,13 +32,13 @@ public:
   PdpWord& reg(int index) { return regs[index]; }
   PSW psw;
   static const std::vector<const Command*> commands;
-  
-  private:
+
+private:
   Memory mem_;
   Loader loader_;
   Logger logger_;
   PdpWord regs[8];
-  const DevicePtr *findOwningDevice(PdpWord addr);
+  const DevicePtr* findOwningDevice(PdpWord addr);
   std::vector<DevicePtr> devices_;
 };
 

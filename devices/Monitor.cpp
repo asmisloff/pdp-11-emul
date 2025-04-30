@@ -16,8 +16,7 @@ Monitor::Monitor(Memory * const mem, Logger * const logger)
 }
 
 Monitor::~Monitor() {
-    mem_ = nullptr;
-    logger_ = nullptr;
+    shutdown_ = true;
     thread_.join();
 }
 
@@ -31,7 +30,7 @@ void Monitor::enqueue(const PdpByte byte) {
 }
 
 void Monitor::run(const Monitor *instance) {
-    while (instance->mem_) {
+    while (!instance->shutdown_) {
         if (instance->mem_->getByte(STATE_ADDR) == WORKS) {
             auto byte = instance->mem_->getByte(DATA_ADDR);
             instance->logger_->info() << byte << std::flush;

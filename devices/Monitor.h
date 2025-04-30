@@ -14,7 +14,7 @@ public:
     Monitor(const Monitor&) = delete;
     Monitor(Monitor&&) = delete;
     Monitor& operator=(const Monitor&) = delete;
-    ~Monitor();
+    virtual ~Monitor() override;
     bool owns(PdpAddr addr) const override;
     void enqueue(const PdpByte byte) override;
 private:
@@ -22,6 +22,7 @@ private:
     Memory * mem_;
     Logger * logger_;
     std::thread thread_;
+    bool shutdown_ = false;
 };
 
 #endif // MONITOR_H
