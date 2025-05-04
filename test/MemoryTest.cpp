@@ -8,15 +8,18 @@
 #include "../Memory.h"
 
 void testGetAndSetByte() {
+  std::cout << "testGetAndSetByte: ";
   Memory mem;
   PdpAddr addr = 13;
   PdpByte byte = 0x1A;
   assert(mem.getByte(addr) != byte);
   mem.setByte(addr, byte);
   assert(mem.getByte(addr) == byte);
+  std::cout << "PASSED\n";
 }
 
 void testGetAndSetWord() {
+  std::cout << "testGetAndSetWord: ";
   Memory mem;
   PdpAddr addr = 12;
   PdpWord word(0xABCD);
@@ -25,9 +28,11 @@ void testGetAndSetWord() {
   assert(mem.getWord(addr) == word);
   assert(mem.getByte(addr) == word.low());
   assert(mem.getByte(addr + 1) == word.high());
+  std::cout << "PASSED\n";
 }
 
 void testCheckWordAddr() {
+  std::cout << "testCheckWordAddr: ";
   Memory mem;
   PdpAddr addr = 13;
   try {
@@ -37,9 +42,11 @@ void testCheckWordAddr() {
   } catch (std::out_of_range &e) {
     /* pass */
   }
+  std::cout << "PASSED\n";
 }
 
 void testDump() {
+  std::cout << "testDump: ";
   Memory mem;
   PdpAddr begin = 14;
   PdpAddr end = 25;
@@ -57,6 +64,7 @@ void testDump() {
   mem.dump(begin, end, ss);
   std::string actual = ss.str();
   assert(expected.compare(actual) == 0);
+  std::cout << "PASSED\n";
 }
 
 int main() {

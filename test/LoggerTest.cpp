@@ -3,7 +3,7 @@
 #include <sstream>
 #include "../Logger.h"
 
-void test() {
+void printHelloWorld() {
   Logger logger;
   int a = 2, b = 3;
   logger.level = Logger::Level::DEBUG;
@@ -15,6 +15,6 @@ void test() {
 }
 
 int main() {
-  test();
+  printHelloWorld();
   return 0;
 }

@@ -2,7 +2,8 @@
 
 constexpr PdpAddr STATE_ADDR = 0177564;
 
-void test() {
+void printHelloWorld() {
+    std::cout << "printHelloWorld: ";
     Memory mem;
     Logger logger;
     Monitor m(&mem, &logger);
@@ -13,9 +14,10 @@ void test() {
     }
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(100ms); // Дождаться завершения печати
+    std::cout << " IGNORED\n";
 }
 
 int main() {
-    test();
+    printHelloWorld();
     return 0;
 }
