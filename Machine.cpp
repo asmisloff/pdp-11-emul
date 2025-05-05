@@ -65,7 +65,7 @@ void Machine::run(std::istream& is) {
         }
         w << 'R' << 7 << ':' << std::oct << regs[7].toUnsigned() << '\n';
         w << "Z:" << psw.zeroBit << " N:" << psw.negBit << " C:" << psw.carryBit << '\n';
-        });
+    });
 }
 
 PdpByte Machine::getByte(PdpAddr addr) {

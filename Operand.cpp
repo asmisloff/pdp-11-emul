@@ -33,6 +33,11 @@ PdpWord Operand::read(Machine& m) {
       PdpWord addr = m.getWord(addrOfAddr);
       return m.getWord(addr);
     }
+    case 6: {
+      int16_t offset = m.getWord(m.pc()++).toSigned();
+      PdpAddr addr = m.reg(reg_).toUnsigned() + offset;
+      return m.getWord(addr);
+    }
     default:
       throw std::logic_error("Unsupported mode -- Operand::read");
   }
@@ -82,6 +87,12 @@ void Operand::write(Machine& m, PdpWord word) {
       m.setWord(addr, word);
       break;
     }
+    case 6: {
+      PdpWord offset = m.getWord(m.pc()++);
+      PdpAddr addr = m.reg(reg_).toUnsigned() + offset.toSigned();
+      m.setWord(addr, word);
+      break;
+    }
     default:
       throw std::logic_error("Unsupported mode -- Operand::write");
   }
@@ -117,6 +128,12 @@ void Operand::writeb(Machine& m, PdpByte byte) {
     case 5: {
       PdpWord ptrArrd = --m.reg(reg_);
       PdpWord addr = m.getWord(ptrArrd);
+      m.setByte(addr, byte);
+      break;
+    }
+    case 6: {
+      PdpWord offset = m.getWord(m.pc()++);
+      PdpAddr addr = m.reg(reg_).toUnsigned() + offset.toSigned();
       m.setByte(addr, byte);
       break;
     }
@@ -165,6 +182,11 @@ std::string Operand::toStr(Machine& m) const {
     }
     case 5: {
       ss << "@-(R" << static_cast<int>(reg_) << ")";
+      break;
+    }
+    case 6: {
+      int16_t offset = m.getWord(m.pc()).toSigned();
+      ss << offset << "(R" << static_cast<int>(reg_) << ")";
       break;
     }
     default:

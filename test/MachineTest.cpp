@@ -98,7 +98,9 @@ void test_04_mode4() {
 void testMonitorCases() {
     std::map<std::string, std::string> testCases{
       {"07_putchar", "*"},
-      {"08_hello", "Hello, world!"}
+      {"08_hello", "Hello, world!"},
+      {"09_mode6_minus", "c"},
+      {"09_mode6_plus", "e"}
     };
     for (auto [testName, expected] : testCases) {
         std::cout << testName << ": ";
