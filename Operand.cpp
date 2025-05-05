@@ -12,6 +12,9 @@ Operand Operand::DD(int opcode) {
   return Operand(mode, reg);
 }
 
+/* TODO: устранить дублирование.
+         - Вар.: разложить функции getValue по индексам мод.
+         - Перенести отладочное логирование в getValue. */
 PdpWord Operand::read(Machine& m) {
   switch (mode_) {
     case 0:
@@ -36,6 +39,12 @@ PdpWord Operand::read(Machine& m) {
     case 6: {
       int16_t offset = m.getWord(m.pc()++).toSigned();
       PdpAddr addr = m.reg(reg_).toUnsigned() + offset;
+      return m.getWord(addr);
+    }
+    case 7: {
+      int16_t offset = m.getWord(m.pc()++).toSigned();
+      PdpAddr addrOfAddr = m.reg(reg_).toUnsigned() + offset;
+      PdpAddr addr = m.getWord(addrOfAddr);
       return m.getWord(addr);
     }
     default:
@@ -93,6 +102,13 @@ void Operand::write(Machine& m, PdpWord word) {
       m.setWord(addr, word);
       break;
     }
+    case 7: {
+      int16_t offset = m.getWord(m.pc()++).toSigned();
+      PdpAddr addrOfAddr = m.reg(reg_).toUnsigned() + offset;
+      PdpAddr addr = m.getWord(addrOfAddr);
+      m.setWord(addr, word);
+      break;
+    }
     default:
       throw std::logic_error("Unsupported mode -- Operand::write");
   }
@@ -134,6 +150,13 @@ void Operand::writeb(Machine& m, PdpByte byte) {
     case 6: {
       PdpWord offset = m.getWord(m.pc()++);
       PdpAddr addr = m.reg(reg_).toUnsigned() + offset.toSigned();
+      m.setByte(addr, byte);
+      break;
+    }
+    case 7: {
+      int16_t offset = m.getWord(m.pc()++).toSigned();
+      PdpAddr addrOfAddr = m.reg(reg_).toUnsigned() + offset;
+      PdpAddr addr = m.getWord(addrOfAddr);
       m.setByte(addr, byte);
       break;
     }
@@ -187,6 +210,11 @@ std::string Operand::toStr(Machine& m) const {
     case 6: {
       int16_t offset = m.getWord(m.pc()).toSigned();
       ss << offset << "(R" << static_cast<int>(reg_) << ")";
+      break;
+    }
+    case 7: {
+      int16_t offset = m.getWord(m.pc()).toSigned();
+      ss << '@' << offset << "(R" << static_cast<int>(reg_) << ")";
       break;
     }
     default:

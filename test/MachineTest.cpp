@@ -100,7 +100,8 @@ void testMonitorCases() {
       {"07_putchar", "*"},
       {"08_hello", "Hello, world!"},
       {"09_mode6_minus", "c"},
-      {"09_mode6_plus", "e"}
+      {"09_mode6_plus", "e"},
+      {"09_mode67", "*"}
     };
     for (auto [testName, expected] : testCases) {
         std::cout << testName << ": ";
