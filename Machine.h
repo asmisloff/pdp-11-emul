@@ -30,7 +30,7 @@ public:
   void setByte(PdpAddr addr, PdpByte value);
   void setWord(PdpAddr addr, PdpWord value);
   Logger& logger() { return logger_; }
-  PdpWord& reg(int index) { return regs[index]; }
+  PdpWord& reg(int index) { return regs.at(index); }
   PSW psw;
   static const std::vector<const Command*> commands;
 
@@ -38,7 +38,7 @@ private:
   Memory mem_;
   Loader loader_;
   Logger logger_;
-  PdpWord regs[8];
+  std::array<PdpWord, 8> regs;
   const DevicePtr* findOwningDevice(PdpWord addr);
   std::vector<DevicePtr> devices_;
 };

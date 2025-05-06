@@ -1,4 +1,4 @@
-TESTS = PdpWord Memory Loader Logger Operand Command Machine Monitor
+TESTS = PdpWord Memory Loader Logger Operand Command Machine Monitor PdpRef
 .PHONY: $(TESTS)
 all: $(TESTS)
 
@@ -16,6 +16,9 @@ $(O_FILES): $(CPP_FILES)
 
 PdpWord: ../PdpWordTest.cpp ../../PdpTypes.h
 	$(RUN) ../PdpWordTest.cpp
+
+PdpRef: ../PdpRefTest.cpp $(O_FILES)
+	$(RUN) $^
 
 Memory: ../MemoryTest.cpp Memory.o
 	$(RUN) $^
