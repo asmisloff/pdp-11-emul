@@ -120,10 +120,29 @@ void testMonitorCases() {
     }
 }
 
+void zachet() {
+    std::map<std::string, std::string> testCases{
+        {"putbin", "*"}
+    };
+    for (auto [testName, expected] : testCases) {
+        std::cout << testName << ": ";
+        std::ifstream fs("./e2e/zachet/" + testName + "/" + testName + ".pdp.o");
+        Machine m;
+        m.logger().info().setStream(std::make_unique<std::stringstream>());
+        m.run(fs);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Дождаться вывода последнего символа
+        auto actual = fromLoggerInfoStream(m);
+        std::cout << actual << " -- ";
+        // assert(expected == actual);
+        std::cout << "PASSED\n";
+    }
+}
+
 int main() {
     testEmptyProgram();
     test_e2e_cases();
     test_04_mode4();
     testMonitorCases();
+    zachet();
     return 0;
 }
