@@ -1,4 +1,4 @@
-#include "./Operand.h"
+#include "Operand.h"
 
 Operand Operand::SS(int opcode) {
   const int mode = (opcode & 0007000) >> 9;
@@ -12,9 +12,11 @@ Operand Operand::DD(int opcode) {
   return Operand(mode, reg);
 }
 
-/* TODO: устранить дублирование.
+/* TODO: 
+    1. Устранить дублирование.
          - Вар.: разложить функции getValue по индексам мод.
-         - Перенести отладочное логирование в getValue. */
+         - Перенести отладочное логирование в getValue.
+    2. Возвращать PdpPtr. Команды будут вызывать на нем addr(), val() или valb(). */
 PdpWord Operand::read(Machine& m) {
   switch (mode_) {
     case 0:
@@ -37,9 +39,7 @@ PdpWord Operand::read(Machine& m) {
       return m.getWord(addr);
     }
     case 6: {
-      int16_t offset = m.getWord(m.pc()++).toSigned();
-      PdpAddr addr = m.reg(reg_).toUnsigned() + offset;
-      return m.getWord(addr);
+      return m.getWord(readNoDeref(m));
     }
     case 7: {
       int16_t offset = m.getWord(m.pc()++).toSigned();
@@ -148,9 +148,7 @@ void Operand::writeb(Machine& m, PdpByte byte) {
       break;
     }
     case 6: {
-      PdpWord offset = m.getWord(m.pc()++);
-      PdpAddr addr = m.reg(reg_).toUnsigned() + offset.toSigned();
-      m.setByte(addr, byte);
+      m.setByte(readNoDeref(m), byte);
       break;
     }
     case 7: {
@@ -164,6 +162,14 @@ void Operand::writeb(Machine& m, PdpByte byte) {
       throw std::logic_error("Operand::writeb -- Unsupported mode: " + std::to_string(mode_));
     }
   }
+}
+
+PdpAddr Operand::readNoDeref(Machine& m) {
+    if (mode_ == 6) {
+      PdpWord offset = m.getWord(m.pc()++);
+      return m.reg(reg_).toUnsigned() + offset.toSigned();
+    }
+    return 0;
 }
 
 std::string Operand::toStr(Machine& m) const {

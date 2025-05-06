@@ -9,3 +9,5 @@
 #include "BeqCommand.h"
 #include "TestbCommand.h"
 #include "BplCommand.h"
+#include "JsrCommand.h"
+#include "RtsCommand.h"

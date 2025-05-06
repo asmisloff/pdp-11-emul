@@ -14,6 +14,7 @@ class Operand {
   PdpWord readb(Machine& m);
   void write(Machine& m, PdpWord word);
   void writeb(Machine& m, PdpByte byte);
+  PdpAddr readNoDeref(Machine& m);
 
  private:
   Operand();

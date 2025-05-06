@@ -23,6 +23,7 @@ class Machine {
 public:
   Machine();
   PdpWord& pc();
+  PdpWord& sp();
   void run(std::istream& is);
   PdpByte getByte(PdpAddr addr);
   PdpWord getWord(PdpAddr addr);

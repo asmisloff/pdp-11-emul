@@ -18,9 +18,11 @@ static const BrCommand BR;
 static const BeqCommand BEQ;
 static const TestbCommand TESTb;
 static const BplCommand BPL;
+static const JsrCommand JSR;
+static const RtsCommand RTS;
 
 const std::vector<const Command*> Machine::commands = {
-  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TESTb, &BPL
+  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TESTb, &BPL, &JSR, &RTS
 };
 
 Machine::Machine()
@@ -32,6 +34,10 @@ Machine::Machine()
 
 PdpWord& Machine::pc() {
     return regs[7];
+}
+
+PdpWord& Machine::sp() {
+    return regs[6];
 }
 
 const Command* findCommand(int opcode) {
