@@ -61,7 +61,9 @@ void Machine::run(std::istream& is) {
         pc()++;
         cmd = findCommand(opcode);
         if (cmd == nullptr) {
-            throw std::invalid_argument("invalid opcode: " + std::to_string(opcode));
+            std::stringstream ss;
+            ss << "invalid opcode: 0o" << std::oct << opcode;
+            throw std::invalid_argument(ss.str());
         }
         cmd->exec(opcode, *this);
     } while (cmd != &HALT);
