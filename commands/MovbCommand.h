@@ -4,7 +4,7 @@
 #include "./Command.h"
 #include "./MovCommand.h"
 
-class MovbCommand : public MovCommand {
+class MovbCommand : public Command {
 public:
     const std::string& name() const override;
     bool match(int opcode) const override;

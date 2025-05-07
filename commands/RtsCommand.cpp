@@ -12,10 +12,9 @@ bool RtsCommand::match(int opcode) const {
 }
 
 void RtsCommand::exec(int opcode, Machine& m) const {
+    logDebug(m);
     int regIdx = opcode & 0000007;
     m.pc() = m.reg(regIdx);
     m.reg(regIdx) = m.getWord(m.sp()++);
-    m.logger().debug([this, &regIdx, &m](Logger::OStreamWrapper& w) {
-        w << name() << " R" << regIdx << ' ' << m.pc() << '\n';
-    });
+    m.logger().debug() << 'R' << regIdx << ' ' << m.pc();
 }

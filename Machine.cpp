@@ -57,7 +57,6 @@ void Machine::run(std::istream& is) {
     const Command* cmd = nullptr;
     do {
         int opcode = mem_.getWord(pc());
-        logger().debug() << pc() << ": ";
         pc()++;
         cmd = findCommand(opcode);
         if (cmd == nullptr) {
@@ -67,12 +66,12 @@ void Machine::run(std::istream& is) {
         }
         cmd->exec(opcode, *this);
     } while (cmd != &HALT);
-    logger().debug([this](Logger::OStreamWrapper& w) {
-        for (int i = 0; i < 7; i++) {
-            w << 'R' << i << ':' << std::oct << regs[i].toUnsigned() << ' ';
+    logger().lazyDebug([this](Logger::OStreamWrapper& w) {
+        w << "\nR0" << ':' << std::oct << regs[0].toUnsigned();
+        for (int i = 1; i < 8; i++) {
+            w << " R" << i << ':' << std::oct << regs[i].toUnsigned();
         }
-        w << 'R' << 7 << ':' << std::oct << regs[7].toUnsigned() << '\n';
-        w << "Z:" << psw.zeroBit << " N:" << psw.negBit << " C:" << psw.carryBit << '\n';
+        w << '\n' << "Z:" << psw.zeroBit << " N:" << psw.negBit << " C:" << psw.carryBit << '\n';
     });
 }
 

@@ -1,230 +1,102 @@
+#include <functional>
+
 #include "Operand.h"
 
-Operand Operand::SS(int opcode) {
-  const int mode = (opcode & 0007000) >> 9;
-  const int reg = (opcode & 0000700) >> 6;
-  return Operand(mode, reg);
+Operand::Operand(char mode, char reg, CommandMode cmdMode)
+    : mode_{mode},
+    regIdx_{reg},
+    cmdMode_{reg < 6 ? cmdMode : CommandMode::WORD}
+{}
+
+Operand Operand::SS(int opcode, CommandMode cmdMode) {
+    const int mode = (opcode & 0007000) >> 9;
+    const int reg = (opcode & 0000700) >> 6;
+    return Operand(mode, reg, cmdMode);
 }
 
-Operand Operand::DD(int opcode) {
-  const int mode = (opcode & 0000070) >> 3;
-  const int reg = opcode & 0000007;
-  return Operand(mode, reg);
+Operand Operand::DD(int opcode, CommandMode cmdMode) {
+    const int mode = (opcode & 0000070) >> 3;
+    const int reg = opcode & 0000007;
+    return Operand(mode, reg, cmdMode);
 }
 
-/* TODO: 
-    1. Устранить дублирование.
-         - Вар.: разложить функции getValue по индексам мод.
-         - Перенести отладочное логирование в getValue.
-    2. Возвращать PdpPtr. Команды будут вызывать на нем addr(), val() или valb(). */
-PdpWord Operand::read(Machine& m) {
-  switch (mode_) {
-    case 0:
-      return m.reg(reg_);
-    case 1:
-      return m.getWord(m.reg(reg_));
-    case 2:
-      return m.getWord(m.reg(reg_)++);
-    case 3: {
-      PdpWord addrOfAddr = m.reg(reg_)++;
-      PdpWord addr = m.getWord(addrOfAddr);
-      return m.getWord(addr);
-    }
-    case 4: {
-      return m.getWord(--m.reg(reg_));
-    }
-    case 5: {
-      PdpWord addrOfAddr = --m.reg(reg_);
-      PdpWord addr = m.getWord(addrOfAddr);
-      return m.getWord(addr);
-    }
-    case 6: {
-      return m.getWord(readNoDeref(m));
-    }
-    case 7: {
-      int16_t offset = m.getWord(m.pc()++).toSigned();
-      PdpAddr addrOfAddr = m.reg(reg_).toUnsigned() + offset;
-      PdpAddr addr = m.getWord(addrOfAddr);
-      return m.getWord(addr);
-    }
-    default:
-      throw std::logic_error("Unsupported mode -- Operand::read");
-  }
+PdpRef evalMode0(const Operand* op, Machine* m) {
+    int i = op->regIdx();
+    m->logger().debug() << "R" << i << ' ';
+    return PdpRef(m, PdpRef::REG, i);
 }
 
-PdpWord Operand::readb(Machine& m) {
-  if (reg_ > 5) {
-    return read(m);
-  }
-  if (mode_ == 2) {
-    PdpWord addr = m.reg(reg_);
-    m.reg(reg_) += 1;
-    return PdpWord::fromByte(m.getByte(addr));
-  }
-  if (mode_ == 4) {
-    PdpWord& addr = m.reg(reg_);
-    addr -= 1;
-    return PdpWord::fromByte(m.getByte(addr));
-  }
-  return PdpWord::fromByte(read(m).low());
+PdpRef evalMode1(const Operand* op, Machine* m) {
+    int i = op->regIdx();
+    m->logger().debug() << "(R" <<i << ") ";
+    return PdpRef(m, PdpRef::MEM, m->reg(i));
 }
 
-void Operand::write(Machine& m, PdpWord word) {
-  switch (mode_) {
-    case 0: 
-      m.reg(reg_) = word;
-      break;
-    case 1:
-      m.setWord(m.reg(reg_), word);
-      break;
-    case 2: 
-      m.setWord(m.reg(reg_)++, word);
-      break;
-    case 3: {
-      PdpWord addrOfAddr = m.reg(reg_)++;
-      PdpWord addr = m.getWord(addrOfAddr);
-      m.setWord(addr, word);
-      break;
-    }
-    case 4: {
-      m.setWord(--m.reg(reg_), word);
-      break;
-    }
-    case 5: {
-      PdpWord ptrArrd = --m.reg(reg_);
-      PdpWord addr = m.getWord(ptrArrd);
-      m.setWord(addr, word);
-      break;
-    }
-    case 6: {
-      PdpWord offset = m.getWord(m.pc()++);
-      PdpAddr addr = m.reg(reg_).toUnsigned() + offset.toSigned();
-      m.setWord(addr, word);
-      break;
-    }
-    case 7: {
-      int16_t offset = m.getWord(m.pc()++).toSigned();
-      PdpAddr addrOfAddr = m.reg(reg_).toUnsigned() + offset;
-      PdpAddr addr = m.getWord(addrOfAddr);
-      m.setWord(addr, word);
-      break;
-    }
-    default:
-      throw std::logic_error("Unsupported mode -- Operand::write");
-  }
+PdpRef evalMode2(const Operand* op, Machine* m) {
+    int i = op->regIdx();
+    m->logger().debug() << "(R" << i << ")+ ";
+    PdpWord addr = m->reg(i);
+    op->incReg(*m);
+    return PdpRef(m, PdpRef::MEM, addr);
 }
 
-void Operand::writeb(Machine& m, PdpByte byte) {
-  if (reg_ > 5 || mode_ == 0) {
-    return write(m, PdpWord::fromByte(byte));
-  }
-  switch (mode_) {
-    case 1: {
-      m.setByte(m.reg(reg_), byte);
-      break;
-    }
-    case 2: {
-      PdpWord addr = m.reg(reg_);
-      m.reg(reg_) += 1;
-      m.setByte(addr, byte);
-      break;
-    }
-    case 3: {
-      PdpWord addrOfAddr = m.reg(reg_)++;
-      PdpWord addr = m.getWord(addrOfAddr);
-      m.setByte(addr, byte);
-      break;
-    }
-    case 4: {
-      PdpWord& addr = m.reg(reg_);
-      addr -= 1;
-      m.setByte(addr, byte);
-      break;
-    }
-    case 5: {
-      PdpWord ptrArrd = --m.reg(reg_);
-      PdpWord addr = m.getWord(ptrArrd);
-      m.setByte(addr, byte);
-      break;
-    }
-    case 6: {
-      m.setByte(readNoDeref(m), byte);
-      break;
-    }
-    case 7: {
-      int16_t offset = m.getWord(m.pc()++).toSigned();
-      PdpAddr addrOfAddr = m.reg(reg_).toUnsigned() + offset;
-      PdpAddr addr = m.getWord(addrOfAddr);
-      m.setByte(addr, byte);
-      break;
-    }
-    default: {
-      throw std::logic_error("Operand::writeb -- Unsupported mode: " + std::to_string(mode_));
-    }
-  }
+PdpRef evalMode3(const Operand* op, Machine* m) {
+    int i = op->regIdx();
+    m->logger().debug() << "@(R" << i << ") ";
+    PdpAddr addrOfAddr = m->reg(i)++;
+    PdpAddr addr = m->getWord(addrOfAddr);
+    return PdpRef(m, PdpRef::MEM, addr);
 }
 
-PdpAddr Operand::readNoDeref(Machine& m) {
-    if (mode_ == 6) {
-      PdpWord offset = m.getWord(m.pc()++);
-      return m.reg(reg_).toUnsigned() + offset.toSigned();
-    }
-    return 0;
+PdpRef evalMode4(const Operand* op, Machine* m) {
+    int i = op->regIdx();
+    m->logger().debug() << "-(R" << i << ") ";
+    PdpAddr addr = m->reg(i);
+    op->decReg(*m);
+    return PdpRef(m, PdpRef::MEM, addr);
 }
 
-std::string Operand::toStr(Machine& m) const {
-  std::stringstream ss;
-  switch (mode_) {
-    case 0:
-      ss << "R" << static_cast<int>(reg_);
-      break;
-    case 1: {
-      if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
-        PdpWord ptr = m.reg(reg_);
-        ss << "#" << std::oct << m.getWord(ptr).toUnsigned();
-      } else { // Если другой регистр, то его номер в скобках.
-        ss << "(R" << static_cast<int>(reg_) << ")";
-      }
-      break;
-    }
-    case 2: {
-      if (reg_ == 7) { // Операнд в оперативной памяти - показать его значение.
-        PdpWord ptr = m.reg(reg_);
-        ss << "#" << std::oct << m.getWord(ptr).toUnsigned();
-      } else { // Если другой регистр, то его номер в скобках.
-        ss << "(R" << static_cast<int>(reg_) << ")+";
-      }
-      break;
-    }
-    case 3: {
-      if (reg_ == 7) {
-        PdpWord ptr = m.reg(reg_);
-        ss << "@#" << std::oct << m.getWord(ptr).toUnsigned();
-      } else {
-        ss << "@(R" << static_cast<int>(reg_) << ")";
-      }
-      break;
-    }
-    case 4: {
-      ss << "-(R" << static_cast<int>(reg_) << ")";
-      break;
-    }
-    case 5: {
-      ss << "@-(R" << static_cast<int>(reg_) << ")";
-      break;
-    }
-    case 6: {
-      int16_t offset = m.getWord(m.pc()).toSigned();
-      ss << offset << "(R" << static_cast<int>(reg_) << ")";
-      break;
-    }
-    case 7: {
-      int16_t offset = m.getWord(m.pc()).toSigned();
-      ss << '@' << offset << "(R" << static_cast<int>(reg_) << ")";
-      break;
-    }
-    default:
-      throw std::logic_error("Unsupported mode -- Operand::to_string");      
-  }
-  return ss.str();
+PdpRef evalMode5(const Operand* op, Machine* m) {
+    int i = op->regIdx();
+    m->logger().debug() << "@-(R" << i << ") ";
+    PdpAddr addrOfAddr = --m->reg(i);
+    PdpAddr addr = m->getWord(addrOfAddr);
+    return PdpRef(m, PdpRef::MEM, addr);
+}
+
+PdpRef evalMode6(const Operand* op, Machine* m) {
+    PdpAddr offsetAddr = m->pc()++;
+    int16_t offset = m->getWord(offsetAddr).toSigned();
+    int i = op->regIdx();
+    m->logger().debug() << offset << "(R" << i << ") ";
+    PdpAddr addr = m->reg(i).toUnsigned() + offset;
+    return PdpRef(m, PdpRef::MEM, addr);
+}
+
+PdpRef evalMode7(const Operand* op, Machine* m) {
+    PdpAddr offsetAddr = m->pc()++;
+    int16_t offset = m->getWord(offsetAddr).toSigned();
+    int i = op->regIdx();
+    m->logger().debug() << '@' << offset << "(R" << i << ") ";
+    PdpAddr addrOfAddr = m->reg(i).toUnsigned() + offset;
+    PdpAddr addr = m->getWord(addrOfAddr);
+    return PdpRef(m, PdpRef::MEM, addr);
+}
+
+std::array<std::function<PdpRef(const Operand*, Machine*)>, 8> evaluators {
+    evalMode0, evalMode1, evalMode2, evalMode3, evalMode4, evalMode5, evalMode6, evalMode7
+};
+
+PdpRef Operand::eval(Machine& m) const {
+    return evaluators[mode_](this, &m);
+}
+
+void Operand::incReg(Machine& m) const {
+    int amount = (cmdMode_ == BYTE) ? 1 : 2;
+    m.reg(regIdx_) += amount;
+}
+
+void Operand::decReg(Machine& m) const {
+    int amount = (cmdMode_ == BYTE) ? 1 : 2;
+    m.reg(regIdx_) -= amount;
 }

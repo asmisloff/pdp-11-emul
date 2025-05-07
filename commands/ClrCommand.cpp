@@ -12,10 +12,8 @@ bool ClrCommand::match(int opcode) const {
 }
 
 void ClrCommand::exec(int opcode, Machine& m) const {
-    Operand dd = Operand::DD(opcode);
-    m.logger().debug([this, &m, &dd](Logger::OStreamWrapper& w) {
-        w << name() << ' ' << dd.toStr(m) << '\n';
-    });
-    dd.write(m, 0);
+    logDebug(m);
+    Operand dd = Operand::DD(opcode, CommandMode::WORD);
+    dd.eval(m).setWord(0);
     m.psw = { .zeroBit = 1, .negBit = 0, .carryBit = 0 };
 }

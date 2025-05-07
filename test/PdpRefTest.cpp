@@ -10,7 +10,7 @@ void testGetWordFromRam() {
     PdpAddr addr = 0123456;
     PdpWord w = 013;
     m.setWord(addr, w);
-    PdpRef ref(&m, PdpRef::RAM, addr);
+    PdpRef ref(&m, PdpRef::MEM, addr);
     assert(ref.getWord() == w);
     std::cout << "PASSED\n";
 }
@@ -30,7 +30,7 @@ void testGetByteFromRam() {
     PdpAddr addr = 0123456;
     PdpByte b = 013;
     m.setByte(addr, b);
-    PdpRef ref(&m, PdpRef::RAM, addr);
+    PdpRef ref(&m, PdpRef::MEM, addr);
     assert(ref.getByte() == b);
     std::cout << "PASSED\n";
 }
@@ -49,7 +49,7 @@ void testSetWordToRam() {
     std::cout << "testSetWordToRam: ";
     PdpAddr addr = 0123456;
     PdpWord w = 013;
-    PdpRef ref(&m, PdpRef::RAM, addr);
+    PdpRef ref(&m, PdpRef::MEM, addr);
     ref.setWord(w);
     assert(m.getWord(addr) == w);
     std::cout << "PASSED\n";

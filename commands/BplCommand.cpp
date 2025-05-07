@@ -12,10 +12,9 @@ bool BplCommand::match(int opcode) const {
 }
 
 void BplCommand::exec(int opcode, Machine &m) const {
+    logDebug(m);
     if (!m.psw.negBit) {
         m.pc() += 2 * char(opcode);
     }
-    m.logger().debug([this, &m](Logger::OStreamWrapper& w) {
-        w << name() << ' ' << m.pc() << '\n';
-    });
+    m.logger().debug() << "goto " << ' ' << m.pc();
 }

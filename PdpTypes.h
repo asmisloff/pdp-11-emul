@@ -1,9 +1,9 @@
+#ifndef PDP_TYPES_H
+#define PDP_TYPES_H
+
 #include <cstdint>
 #include <iostream>
 #include <iomanip>
-
-#ifndef PDP_TYPES_H
-#define PDP_TYPES_H
 
 constexpr int PDP_BYTE_SIZE = 8;
 
@@ -29,6 +29,7 @@ class PdpWord {
   int16_t toSigned() const { return int16_t(toUnsigned()); }
   PdpWord operator+(const PdpWord &other) const { return PdpWord(toUnsigned() + other.toUnsigned()); }
   PdpWord operator-(const PdpWord &other) const { return PdpWord(toUnsigned() - other.toUnsigned()); }
+  PdpWord operator-(int amount) const { return PdpWord(toUnsigned() - amount); }
   void operator+=(int amount) { assign(toUnsigned() + amount); }
   void operator-=(int amount) { assign(toUnsigned() - amount); }
   PdpWord operator++(int);
@@ -43,7 +44,7 @@ class PdpWord {
 
 inline std::ostream& operator<<(std::ostream &out, const PdpWord &word) {
   return out << std::oct << std::setfill('0') << std::setw(6)
-             << word.toUnsigned();
+             << word.toUnsigned() << std::dec;
 }
 
 inline PdpWord PdpWord::operator++(int)  {

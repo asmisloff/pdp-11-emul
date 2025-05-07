@@ -11,10 +11,11 @@ bool MovbCommand::match(int opcode) const {
 }
 
 void MovbCommand::exec(int opcode, Machine& m) const {
-    auto [ss, dd] = getOperands(opcode, m);
-    PdpWord value = ss.readb(m);
-    PdpByte byte = value.low();
-    dd.writeb(m, byte);
+    logDebug(m);
+    Operand ss = Operand::SS(opcode, CommandMode::BYTE);
+    Operand dd = Operand::DD(opcode, CommandMode::BYTE);
+    PdpByte byte = ss.eval(m).getByte();
+    dd.eval(m).setByte(byte);
     m.psw.zeroBit = (byte == 0);
     m.psw.negBit = (int8_t(byte) < 0);
 }

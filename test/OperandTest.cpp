@@ -9,8 +9,8 @@ void testReadMode0() {
   Machine m;
   PdpWord word = 012345;
   m.reg(2) = word;
-  Operand op = Operand::SS(010200);
-  assert(op.read(m) == word);
+  Operand op = Operand::SS(010200, WORD);
+  assert(op.eval(m).getWord() == word);
   std::cout << "PASSED\n";
 }
 
@@ -21,8 +21,8 @@ void testReadMode1() {
   PdpWord expected = 013000;
   m.reg(2) = addr;
   m.setWord(addr, expected);
-  Operand op = Operand::SS(011200);
-  PdpWord actual = op.read(m);
+  Operand op = Operand::SS(011200, WORD);
+  PdpWord actual = op.eval(m).getWord();
   assert(actual == expected);
   std::cout << "PASSED\n";
 }
@@ -34,8 +34,8 @@ void testReadMode2() {
   PdpWord expected = 013000;
   m.pc() = addr;
   m.setWord(addr, expected);
-  Operand op = Operand::SS(012700);
-  PdpWord actual = op.read(m);
+  Operand op = Operand::SS(012700, WORD);
+  PdpWord actual = op.eval(m).getWord();
   assert(actual == expected);
   assert(m.pc() == PdpWord(addr + 2));
   std::cout << "PASSED\n";

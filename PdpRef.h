@@ -7,10 +7,8 @@ class Machine;
 
 class PdpRef {
 public:
-    enum Storage { REG, RAM };
+    enum Storage { REG, MEM };
     PdpRef() = delete;
-    PdpRef(PdpRef&) = delete;
-    PdpRef(PdpRef&&) = delete;
     PdpRef(Machine* m, Storage storage_, PdpAddr addr);
     Storage storage() const;
     PdpAddr addr() const;

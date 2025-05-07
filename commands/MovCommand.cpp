@@ -9,19 +9,12 @@ bool MovCommand::match(int opcode) const {
 }
 
 void MovCommand::exec(int opcode, Machine& m) const {
-    auto [ss, dd] = getOperands(opcode, m);
-    PdpWord value = ss.read(m);
+    logDebug(m);
+    Operand ss = Operand::SS(opcode, CommandMode::WORD);
+    Operand dd = Operand::DD(opcode, CommandMode::WORD);
+    PdpWord value = ss.eval(m).getWord();
     int16_t sv = value.toSigned();
     m.psw.negBit = (sv < 0);
     m.psw.zeroBit = (sv == 0);
-    dd.write(m, value);
-}
-
-std::pair<Operand, Operand> MovCommand::getOperands(int opcode, Machine& m) const {
-    Operand ss = Operand::SS(opcode);
-    Operand dd = Operand::DD(opcode);
-    m.logger().debug([this, &ss, &dd, &m](Logger::OStreamWrapper& w) {
-        w << name() << ' ' << ss.toStr(m) << ' ' << dd.toStr(m) << '\n';
-    });
-    return { ss, dd };
+    dd.eval(m).setWord(value);
 }

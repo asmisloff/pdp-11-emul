@@ -13,11 +13,10 @@ bool TestbCommand::match(int opcode) const {
 }
 
 void TestbCommand::exec(int opcode, Machine &m) const {
-    Operand dd = Operand::DD(opcode);
-    PdpWord w = dd.readb(m);
-    m.psw.zeroBit = w.low() == 0;
-    m.psw.negBit = int8_t(w.low()) < 0;
-    m.logger().debug([this, &dd, &m](Logger::OStreamWrapper& w) {
-        w << name() << ' ' << dd.toStr(m) << ' ' << "Z:" << m.psw.zeroBit << ' ' << "N:" << m.psw.negBit << '\n';
-    });
+    logDebug(m);
+    Operand dd = Operand::DD(opcode, CommandMode::BYTE);
+    PdpByte byte = dd.eval(m).getByte();
+    m.logger().debug() << ' ' << "Z:" << m.psw.zeroBit << ' ' << "N:" << m.psw.negBit;
+    m.psw.zeroBit = (byte == 0);
+    m.psw.negBit = int8_t(byte) < 0;
 }

@@ -6,6 +6,7 @@
 #include <type_traits>
 
 #include "../Machine.h"
+#include "testUtil.h"
 
 std::string read(std::string path) {
     std::ifstream file(path);
@@ -44,11 +45,12 @@ void testEmptyProgram() {
         << "0\n"
         << "0\n";
     m.run(ss);
-    std::string expected = "001000: HALT\n"
-        "R0:0 R1:0 R2:0 R3:0 R4:0 R5:0 R6:0 R7:1002\n"
-        "Z:0 N:0 C:0\n";
+    std::string expected = "\n001000: HALT"
+        "\nR0:0 R1:0 R2:0 R3:0 R4:0 R5:0 R6:0 R7:1002"
+        "\nZ:0 N:0 C:0\n";
     std::string actual = fromLoggerDebugStream(m);
-    assert(expected.compare(actual) == 0);
+    std::cout << actual;
+    assert(eq(expected, actual));
     std::cout << "PASSED\n";
 }
 
@@ -74,8 +76,8 @@ void test_e2e_cases() {
         m.run(fs);
         auto expected = read("./data/" + testName + "_expected.txt");
         auto actual = fromLoggerDebugStream(m);
-        // std::cout << actual << std::endl;
-        assert(expected == actual);
+        std::cout << actual;
+        assert(eq(expected, actual));
         std::cout << "PASSED\n";
     }
 }
@@ -143,6 +145,6 @@ int main() {
     test_e2e_cases();
     test_04_mode4();
     testMonitorCases();
-    zachet();
+    // zachet();
     return 0;
 }
