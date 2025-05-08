@@ -6,7 +6,7 @@
 #include "PdpTypes.h"
 #include "Operand.h"
 #include "Machine.h"
-#include "commands/all.h"
+#include "Command.h"
 
 static const AddCommand  ADD;
 static const MovCommand  MOV;

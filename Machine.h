@@ -8,7 +8,7 @@
 #include "Loader.h"
 #include "Memory.h"
 #include "Logger.h"
-#include "commands/Command.h"
+#include "Command.h"
 #include "devices/Monitor.h"
 
 struct PSW {

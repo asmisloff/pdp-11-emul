@@ -2,7 +2,8 @@
 #include <cstring>
 #include <iostream>
 
-#include "../commands/all.h"
+#include "../Command.h"
+#include "../Machine.h"
 
 void testMov() {
     std::cout << "MOV: ";
