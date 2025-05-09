@@ -51,8 +51,8 @@ PdpRef evalMode3(const Operand* op, Machine* m) {
 PdpRef evalMode4(const Operand* op, Machine* m) {
     int i = op->regIdx();
     m->logger().debug() << "-(R" << i << ") ";
-    PdpAddr addr = m->reg(i);
     op->decReg(*m);
+    PdpAddr addr = m->reg(i);
     return PdpRef(m, PdpRef::MEM, addr);
 }
 
