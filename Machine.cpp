@@ -16,13 +16,16 @@ static const HaltCommand HALT;
 static const ClrCommand  CLR;
 static const BrCommand BR;
 static const BeqCommand BEQ;
+static const TestCommand TEST;
 static const TestbCommand TESTb;
 static const BplCommand BPL;
 static const JsrCommand JSR;
 static const RtsCommand RTS;
+static const IncCommand INC;
+static const RolCommand ROL;
 
 const std::vector<const Command*> Machine::commands = {
-  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TESTb, &BPL, &JSR, &RTS
+  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TEST, &TESTb, &BPL, &JSR, &RTS, &INC, &ROL
 };
 
 Machine::Machine()

@@ -32,8 +32,10 @@ MovbCommand::MovbCommand  () : Command("MOVb",  0170000, 0110000) {}
 MovCommand::MovCommand    () : Command("MOV",   0170000, 0010000) {}
 RtsCommand::RtsCommand    () : Command("RTS",   0777770, 0000200) {}
 SobCommand::SobCommand    () : Command("SOB",   0177000, 0077000) {}
+TestCommand::TestCommand  () : Command("TEST",  0177700, 0005700) {}
 TestbCommand::TestbCommand() : Command("TESTb", 0177700, 0105700) {}
-
+IncCommand::IncCommand    () : Command("INC",   0177700, 0005200) {}
+RolCommand::RolCommand    () : Command("ROL",   0107700, 0006100) {}
 
 void AddCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
@@ -110,11 +112,10 @@ void MovCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
     Operand ss = Operand::SS(opcode, CommandMode::WORD);
     Operand dd = Operand::DD(opcode, CommandMode::WORD);
-    PdpWord value = ss.eval(m).getWord();
-    int16_t sv = value.toSigned();
-    m.psw.negBit = (sv < 0);
-    m.psw.zeroBit = (sv == 0);
-    dd.eval(m).setWord(value);
+    PdpWord word = ss.eval(m).getWord();
+    m.psw.negBit = (word.toSigned() < 0);
+    m.psw.zeroBit = (word == 0);
+    dd.eval(m).setWord(word);
 }
 
 void RtsCommand::exec(int opcode, Machine& m) const {
@@ -137,11 +138,41 @@ void SobCommand::exec(int opcode, Machine& m) const {
     m.logger().debug() << 'R' << i << " goto " << m.pc();
 }
 
+void TestCommand::exec(int opcode, Machine& m) const {
+    logDebug(m);
+    Operand dd = Operand::DD(opcode, CommandMode::WORD);
+    PdpWord word = dd.eval(m).getWord();
+    m.psw.zeroBit = (word == 0);
+    m.psw.negBit = word.toSigned() < 0;
+    m.logger().debug() << ' ' << "Z:" << m.psw.zeroBit << ' ' << "N:" << m.psw.negBit;
+}
+
 void TestbCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
     Operand dd = Operand::DD(opcode, CommandMode::BYTE);
     PdpByte byte = dd.eval(m).getByte();
-    m.logger().debug() << ' ' << "Z:" << m.psw.zeroBit << ' ' << "N:" << m.psw.negBit;
     m.psw.zeroBit = (byte == 0);
     m.psw.negBit = int8_t(byte) < 0;
+    m.logger().debug() << ' ' << "Z:" << m.psw.zeroBit << ' ' << "N:" << m.psw.negBit;
+}
+
+void IncCommand::exec(int opcode, Machine& m) const {
+    logDebug(m);
+    Operand dd = Operand::DD(opcode, CommandMode::WORD);
+    PdpRef ref = dd.eval(m);
+    int16_t newValue = ref.getWord().toSigned() + 1;
+    ref.setWord(newValue);
+    m.psw.zeroBit = (newValue == 0);
+    m.psw.negBit = (newValue < 0);
+}
+
+void RolCommand::exec(int opcode, Machine& m) const {
+    logDebug(m);
+    Operand dd = Operand::DD(opcode, CommandMode::WORD);
+    PdpRef ref = dd.eval(m);
+    int16_t val = ref.getWord().toSigned();
+    int16_t newVal = (val << 1) | m.psw.carryBit;
+    ref.setWord(newVal);
+    m.psw = { .zeroBit = (newVal == 0),.negBit = (newVal < 0), .carryBit = (val < 0) };
+    m.logger().debug() << PdpWord(val) << " -> " << PdpWord(newVal) << " C:" << m.psw.carryBit;
 }

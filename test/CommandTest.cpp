@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cstring>
 #include <iostream>
+#include <fstream>
 
 #include "../Command.h"
 #include "../Machine.h"
@@ -60,11 +61,27 @@ void testRts() {
     std::cout << "PASSED\n";
 }
 
+void testRol() {
+    std::cout << "testRol: ";
+    Machine m;
+    std::unique_ptr<Command> cmd = std::make_unique<RolCommand>();
+    int opcode = 0006101;
+    m.reg(1) = 0123456;
+    cmd->exec(opcode, m);
+    assert(m.reg(1) == 047134);
+    assert(m.psw.carryBit == true);
+    cmd->exec(opcode, m);
+    assert(m.reg(1) == 0116271);
+    assert(m.psw.carryBit == false);
+    std::cout << "PASSED\n";
+}
+
 int main() {
     testMov();
     testAdd();
     testHalt();
     testJsr();
     testRts();
+    testRol();
     return 0;
 }

@@ -75,8 +75,23 @@ struct SobCommand : public Command {
     void exec(int opcode, Machine& m) const override;
 };
 
+struct TestCommand : public Command {
+    TestCommand();
+    void exec(int opcode, Machine& m) const override;
+};
+
 struct TestbCommand : public Command {
     TestbCommand();
+    void exec(int opcode, Machine& m) const override;
+};
+
+struct IncCommand : public Command {
+    IncCommand();
+    void exec(int opcode, Machine& m) const override;
+};
+
+struct RolCommand : public Command {
+    RolCommand();
     void exec(int opcode, Machine& m) const override;
 };
 

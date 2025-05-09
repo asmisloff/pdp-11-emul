@@ -49,7 +49,7 @@ void testEmptyProgram() {
         "\nR0:0 R1:0 R2:0 R3:0 R4:0 R5:0 R6:0 R7:1002"
         "\nZ:0 N:0 C:0\n";
     std::string actual = fromLoggerDebugStream(m);
-    std::cout << actual;
+    // std::cout << actual;
     assert(eq(expected, actual));
     std::cout << "PASSED\n";
 }
@@ -76,7 +76,7 @@ void test_e2e_cases() {
         m.run(fs);
         auto expected = read("./data/" + testName + "_expected.txt");
         auto actual = fromLoggerDebugStream(m);
-        std::cout << actual;
+        // std::cout << actual;
         assert(eq(expected, actual));
         std::cout << "PASSED\n";
     }
@@ -117,7 +117,7 @@ void testMonitorCases() {
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Дождаться вывода последнего символа
         auto actual = fromLoggerInfoStream(m);
         std::cout << actual << " -- ";
-        // assert(expected == actual);
+        assert(expected == actual);
         std::cout << "PASSED\n";
     }
 }
@@ -145,6 +145,6 @@ int main() {
     test_e2e_cases();
     test_04_mode4();
     testMonitorCases();
-    // zachet();
+    zachet();
     return 0;
 }
