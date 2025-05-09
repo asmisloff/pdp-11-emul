@@ -11,7 +11,7 @@ Memory::Memory()
   : mem{std::vector<PdpByte>(size)}
 {}
 
-PdpWord Memory::getWord(PdpAddr addr) const { 
+PdpWord Memory::getWord(PdpAddr addr) const {
   checkWordAddr(addr);
   PdpByte low = mem[addr];
   PdpByte high = mem[addr + 1];

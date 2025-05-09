@@ -142,8 +142,7 @@ void TestCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
     Operand dd = Operand::DD(opcode, CommandMode::WORD);
     PdpWord word = dd.eval(m).getWord();
-    m.psw.zeroBit = (word == 0);
-    m.psw.negBit = word.toSigned() < 0;
+    m.psw = { .zeroBit = (word == 0), .negBit = word.toSigned() < 0, .carryBit = false };
     m.logger().debug() << ' ' << "Z:" << m.psw.zeroBit << ' ' << "N:" << m.psw.negBit;
 }
 
@@ -151,8 +150,7 @@ void TestbCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
     Operand dd = Operand::DD(opcode, CommandMode::BYTE);
     PdpByte byte = dd.eval(m).getByte();
-    m.psw.zeroBit = (byte == 0);
-    m.psw.negBit = int8_t(byte) < 0;
+    m.psw = { .zeroBit = (byte == 0), .negBit = int8_t(byte) < 0, .carryBit = false };
     m.logger().debug() << ' ' << "Z:" << m.psw.zeroBit << ' ' << "N:" << m.psw.negBit;
 }
 
