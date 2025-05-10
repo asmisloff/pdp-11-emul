@@ -2,7 +2,7 @@
 
 constexpr PdpByte READY = 0x80;
 constexpr PdpByte WORKS = 0x00;
-constexpr std::chrono::milliseconds LATENCY(50);
+constexpr std::chrono::milliseconds LATENCY(10);
 constexpr PdpAddr STATE_ADDR = 0177564;
 constexpr PdpAddr DATA_ADDR = 0177566;
 

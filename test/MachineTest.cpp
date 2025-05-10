@@ -99,6 +99,26 @@ void test_04_mode4() {
     }
 }
 
+void doTestMonitorCase(
+    const std::string& pathPrefix,
+    const std::string& testName,
+    const std::string& expected
+) {
+    std::cout << testName << ": ";
+    auto ssPtr = std::make_unique<std::stringstream>();
+    *ssPtr << pathPrefix << '/' << testName << ".pdp.o";
+    std::ifstream fs(ssPtr->str());
+    Machine m;
+    ssPtr->str("");
+    m.logger().info().setStream(std::move(ssPtr));
+    m.run(fs);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Дождаться вывода последнего символа
+    auto actual = fromLoggerInfoStream(m);
+    // std::cout << actual << " -- ";
+    assert(eq(expected, actual));
+    std::cout << "PASSED\n";
+}
+
 void testMonitorCases() {
     std::map<std::string, std::string> testCases{
         {"07_putchar", "*"},
@@ -109,34 +129,20 @@ void testMonitorCases() {
         {"10_jsr_rts", "Hello, world!"}
     };
     for (auto [testName, expected] : testCases) {
-        std::cout << testName << ": ";
-        std::ifstream fs("./e2e/" + testName + "/" + testName + ".pdp.o");
-        Machine m;
-        m.logger().info().setStream(std::make_unique<std::stringstream>());
-        m.run(fs);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Дождаться вывода последнего символа
-        auto actual = fromLoggerInfoStream(m);
-        std::cout << actual << " -- ";
-        assert(expected == actual);
-        std::cout << "PASSED\n";
+        doTestMonitorCase("./e2e/" + testName, testName, expected);
     }
 }
 
 void zachet() {
-    std::map<std::string, std::string> testCases{
-        {"putbin", "*"}
+    std::vector<std::tuple<std::string, std::string, std::string>> testCases {
+        {"./e2e/zachet/putbin", "putbin", "./e2e/zachet/putbin/out.txt"},
+        {"./e2e/zachet/putbin", "putbin1", "./e2e/zachet/putbin/out1.txt"},
+        {"./e2e/zachet/putbin_plane", "putbin_plane", "./e2e/zachet/putbin_plane/out.txt"},
+        {"./e2e/zachet/putbin_plane", "putbin_plane1", "./e2e/zachet/putbin_plane/out1.txt"},
+        // {"./e2e/zachet/puthex", "puthex", "./e2e/zachet/puthex/out.txt"},
     };
-    for (auto [testName, expected] : testCases) {
-        std::cout << testName << ": ";
-        std::ifstream fs("./e2e/zachet/" + testName + "/" + testName + ".pdp.o");
-        Machine m;
-        m.logger().info().setStream(std::make_unique<std::stringstream>());
-        m.run(fs);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Дождаться вывода последнего символа
-        auto actual = fromLoggerInfoStream(m);
-        std::cout << actual << " -- ";
-        // assert(expected == actual);
-        std::cout << "PASSED\n";
+    for (auto [root, testName, expected] : testCases) {
+        doTestMonitorCase(root, testName, read(expected));
     }
 }
 
