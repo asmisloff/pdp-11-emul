@@ -9,7 +9,7 @@
 void testMov() {
     std::cout << "MOV: ";
     MovCommand mov;
-    const Command *cmd = &mov;
+    const Command* cmd = &mov;
     assert(cmd->match(012701));
     std::cout << "PASSED\n";
 }
@@ -17,7 +17,7 @@ void testMov() {
 void testAdd() {
     std::cout << "ADD: ";
     AddCommand add;
-    const Command *cmd = &add;
+    const Command* cmd = &add;
     assert(cmd->match(060001));
     std::cout << "PASSED\n";
 }
@@ -25,12 +25,12 @@ void testAdd() {
 void testHalt() {
     std::cout << "HALT: ";
     HaltCommand halt;
-    const Command *cmd = &halt;
+    const Command* cmd = &halt;
     assert(cmd->match(0));
     std::cout << "PASSED\n";
 }
 
-void testJsr(Machine *mPtr = nullptr) {
+void testJsr(Machine* mPtr = nullptr) {
     if (!mPtr) std::cout << "JSR: ";
     std::unique_ptr<Machine> defaultMPtr = !mPtr ? std::make_unique<Machine>() : nullptr;
     Machine& m = mPtr ? *mPtr : *defaultMPtr;
@@ -76,6 +76,39 @@ void testRol() {
     std::cout << "PASSED\n";
 }
 
+void testAsh() {
+    std::cout << "testAsh: ";
+    Machine m;
+    std::unique_ptr<Command> cmd = std::make_unique<AshCommand>();
+    assert(cmd->match(072003));
+    struct TestData {
+        PdpWord initialValue;
+        int shift;
+        bool expectedCarryBit;
+        PdpWord expectedValue;
+    };
+    auto testCase = [&m, &cmd](TestData&& td) {
+        m.reg(1) = td.initialValue;
+        cmd->exec(00720100 | (td.shift & 077), m);
+        assert(m.psw.carryBit == td.expectedCarryBit);
+        assert(m.psw.negBit == (td.expectedValue.toSigned() < 0));
+        assert(m.reg(1) == td.expectedValue);
+    };
+    testCase({ 
+        .initialValue = 0123456, .shift = 2, .expectedCarryBit = false, .expectedValue = 0116270
+    });
+    testCase({ 
+        .initialValue = 0012346, .shift = -2, .expectedCarryBit = true, .expectedValue = 0002471
+    });
+    testCase({ 
+        .initialValue = 0123455, .shift = -2, .expectedCarryBit = false, .expectedValue = 0164713
+    });
+    testCase({ 
+        .initialValue = 0123455, .shift = -3, .expectedCarryBit = true, .expectedValue = 0172345
+    });
+    std::cout << "PASSED\n";
+}
+
 int main() {
     testMov();
     testAdd();
@@ -83,5 +116,6 @@ int main() {
     testJsr();
     testRts();
     testRol();
+    testAsh();
     return 0;
 }

@@ -95,4 +95,9 @@ struct RolCommand : public Command {
     void exec(int opcode, Machine& m) const override;
 };
 
+struct AshCommand : public Command {
+    AshCommand();
+    void exec(int opcode, Machine& m) const override;
+};
+
 #endif

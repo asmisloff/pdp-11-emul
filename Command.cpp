@@ -36,6 +36,7 @@ TestCommand::TestCommand  () : Command("TEST",  0177700, 0005700) {}
 TestbCommand::TestbCommand() : Command("TESTb", 0177700, 0105700) {}
 IncCommand::IncCommand    () : Command("INC",   0177700, 0005200) {}
 RolCommand::RolCommand    () : Command("ROL",   0107700, 0006100) {}
+AshCommand::AshCommand    () : Command("ASH",   0177000, 0072000) {}
 
 void AddCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
@@ -173,4 +174,24 @@ void RolCommand::exec(int opcode, Machine& m) const {
     ref.setWord(newVal);
     m.psw = { .zeroBit = (newVal == 0),.negBit = (newVal < 0), .carryBit = (val < 0) };
     m.logger().debug() << PdpWord(val) << " -> " << PdpWord(newVal) << " C:" << m.psw.carryBit;
+}
+
+void AshCommand::exec(int opcode, Machine& m) const {
+    logDebug(m);
+    char shift = char((opcode & 077) << 2) >> 2;
+    if (shift != 0) {
+        int i = (opcode >> 6) & 07;
+        int n = (m.reg(i).toSigned() << 16) >> 8;
+        if (shift > 0) {
+            n = (n << shift);
+            m.psw.carryBit = (n & 0x01000000) != 0;
+        } else if (shift < 0) {
+            n = (n >> -shift);
+            m.psw.carryBit = (n & 0x80) != 0;
+        }
+        int16_t res = (n >> 8);
+        m.psw.zeroBit = (res == 0);
+        m.psw.negBit = (res < 0);
+        m.reg(i) = PdpWord(res);
+    }
 }

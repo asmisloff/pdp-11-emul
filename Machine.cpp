@@ -8,24 +8,25 @@
 #include "Machine.h"
 #include "Command.h"
 
-static const AddCommand  ADD;
-static const MovCommand  MOV;
-static const MovbCommand  MOVb;
-static const SobCommand  SOB;
-static const HaltCommand HALT;
-static const ClrCommand  CLR;
-static const BrCommand BR;
-static const BeqCommand BEQ;
-static const TestCommand TEST;
-static const TestbCommand TESTb;
-static const BplCommand BPL;
-static const JsrCommand JSR;
-static const RtsCommand RTS;
-static const IncCommand INC;
-static const RolCommand ROL;
+const AddCommand    ADD;
+const MovCommand    MOV;
+const MovbCommand   MOVb;
+const SobCommand    SOB;
+const HaltCommand   HALT;
+const ClrCommand    CLR;
+const BrCommand     BR;
+const BeqCommand    BEQ;
+const TestCommand   TEST;
+const TestbCommand  TESTb;
+const BplCommand    BPL;
+const JsrCommand    JSR;
+const RtsCommand    RTS;
+const IncCommand    INC;
+const RolCommand    ROL;
+const AshCommand    ASH;
 
 const std::vector<const Command*> Machine::commands = {
-  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TEST, &TESTb, &BPL, &JSR, &RTS, &INC, &ROL
+  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TEST, &TESTb, &BPL, &JSR, &RTS, &INC, &ROL, &ASH
 };
 
 Machine::Machine()
