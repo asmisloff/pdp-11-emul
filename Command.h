@@ -100,4 +100,9 @@ struct AshCommand : public Command {
     void exec(int opcode, Machine& m) const override;
 };
 
+struct BicCommand : public Command {
+    BicCommand();
+    void exec(int opcode, Machine& m) const override;
+};
+
 #endif

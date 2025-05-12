@@ -37,6 +37,7 @@ TestbCommand::TestbCommand() : Command("TESTb", 0177700, 0105700) {}
 IncCommand::IncCommand    () : Command("INC",   0177700, 0005200) {}
 RolCommand::RolCommand    () : Command("ROL",   0107700, 0006100) {}
 AshCommand::AshCommand    () : Command("ASH",   0177000, 0072000) {}
+BicCommand::BicCommand    () : Command("BIC",   0170000, 0040000) {}
 
 void AddCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
@@ -178,9 +179,10 @@ void RolCommand::exec(int opcode, Machine& m) const {
 
 void AshCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
-    char shift = char((opcode & 077) << 2) >> 2;
+    int16_t shift = Operand::DD(opcode, CommandMode::WORD).eval(m).getWord().toSigned();
     if (shift != 0) {
         int i = (opcode >> 6) & 07;
+        m.logger().debug() << 'R' << i << " << " << int(shift);
         int n = (m.reg(i).toSigned() << 16) >> 8;
         if (shift > 0) {
             n = (n << shift);
@@ -194,4 +196,17 @@ void AshCommand::exec(int opcode, Machine& m) const {
         m.psw.negBit = (res < 0);
         m.reg(i) = PdpWord(res);
     }
+}
+
+void BicCommand::exec(int opcode, Machine& m) const {
+    logDebug(m);
+    Operand ss = Operand::SS(opcode, CommandMode::WORD);
+    Operand dd = Operand::DD(opcode, CommandMode::WORD);
+    PdpRef ssRef = ss.eval(m);
+    PdpRef ddRef = dd.eval(m);
+    int16_t res = ddRef.getWord().toUnsigned() & (~ssRef.getWord().toUnsigned());
+    ddRef.setWord(res);
+    m.psw.zeroBit = (res == 0);
+    m.psw.negBit = (res < 0);
+    m.logger().debug() << ddRef.getWord();
 }

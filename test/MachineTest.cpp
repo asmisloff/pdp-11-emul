@@ -139,7 +139,8 @@ void zachet() {
         {"./e2e/zachet/putbin", "putbin1", "./e2e/zachet/putbin/out1.txt"},
         {"./e2e/zachet/putbin_plane", "putbin_plane", "./e2e/zachet/putbin_plane/out.txt"},
         {"./e2e/zachet/putbin_plane", "putbin_plane1", "./e2e/zachet/putbin_plane/out1.txt"},
-        // {"./e2e/zachet/puthex", "puthex", "./e2e/zachet/puthex/out.txt"},
+        {"./e2e/zachet/puthex", "puthex", "./e2e/zachet/puthex/out.txt"},
+        {"./e2e/zachet/puthex", "puthex1", "./e2e/zachet/puthex/out1.txt"},
     };
     for (auto [root, testName, expected] : testCases) {
         doTestMonitorCase(root, testName, read(expected));

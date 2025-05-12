@@ -24,9 +24,10 @@ const RtsCommand    RTS;
 const IncCommand    INC;
 const RolCommand    ROL;
 const AshCommand    ASH;
+const BicCommand    BIC;
 
 const std::vector<const Command*> Machine::commands = {
-  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TEST, &TESTb, &BPL, &JSR, &RTS, &INC, &ROL, &ASH
+  &ADD, &MOV, &MOVb, &SOB, &HALT, &CLR, &BR, &BEQ, &TEST, &TESTb, &BPL, &JSR, &RTS, &INC, &ROL, &ASH, &BIC
 };
 
 Machine::Machine()
