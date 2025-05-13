@@ -38,6 +38,7 @@ IncCommand::IncCommand    () : Command("INC",   0177700, 0005200) {}
 RolCommand::RolCommand    () : Command("ROL",   0107700, 0006100) {}
 AshCommand::AshCommand    () : Command("ASH",   0177000, 0072000) {}
 BicCommand::BicCommand    () : Command("BIC",   0170000, 0040000) {}
+AslCommand::AslCommand    () : Command("ASL",   0177700, 0006300) {}
 
 void AddCommand::exec(int opcode, Machine& m) const {
     logDebug(m);
@@ -209,4 +210,16 @@ void BicCommand::exec(int opcode, Machine& m) const {
     m.psw.zeroBit = (res == 0);
     m.psw.negBit = (res < 0);
     m.logger().debug() << ddRef.getWord();
+}
+
+void AslCommand::exec(int opcode, Machine& m) const {
+    logDebug(m);
+    Operand dd = Operand::DD(opcode, CommandMode::WORD);
+    PdpRef ddRef = dd.eval(m);
+    int16_t val = ddRef.getWord().toSigned();
+    m.psw.carryBit = (val < 0);
+    val = (val << 1);
+    m.psw.zeroBit = (val == 0);
+    m.psw.negBit = (val < 0);
+    ddRef.setWord(val);
 }

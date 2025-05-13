@@ -105,4 +105,9 @@ struct BicCommand : public Command {
     void exec(int opcode, Machine& m) const override;
 };
 
+struct AslCommand : public Command {
+    AslCommand();
+    void exec(int opcode, Machine& m) const override;
+};
+
 #endif
