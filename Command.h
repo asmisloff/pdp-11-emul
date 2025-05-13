@@ -6,12 +6,19 @@
 
 class Machine;
 
+/** Машинная команда. */
 class Command {
 public:
     Command(std::string&& name, int mask, int prefix);
     virtual ~Command() {}
+    
+    /** Символическое имя. */
     const std::string& name() const;
+    
+    /** @return true, если opcode соответствует команде. */
     bool match(int opcode) const;
+    
+    /** Выполнить команду. */
     virtual void exec(int opcode, Machine& m) const = 0;
 protected:
     const std::string name_;
