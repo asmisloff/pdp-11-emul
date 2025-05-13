@@ -139,10 +139,10 @@ void zachet() {
         {"./e2e/zachet/putbin", "putbin1", "./e2e/zachet/putbin/out1.txt"},
         {"./e2e/zachet/putbin_plane", "putbin_plane", "./e2e/zachet/putbin_plane/out.txt"},
         {"./e2e/zachet/putbin_plane", "putbin_plane1", "./e2e/zachet/putbin_plane/out1.txt"},
-        {"./e2e/zachet/puthex", "puthex", "./e2e/zachet/puthex/out.txt"},
-        {"./e2e/zachet/puthex", "puthex1", "./e2e/zachet/puthex/out1.txt"},
-        {"./e2e/zachet/puthex_plane", "puthex", "./e2e/zachet/puthex_plane/out.txt"},
-        {"./e2e/zachet/puthex_plane", "puthex1", "./e2e/zachet/puthex_plane/out1.txt"},
+        {"./e2e/zachet", "puthex/puthex", "./e2e/zachet/puthex/out.txt"},
+        {"./e2e/zachet", "puthex/puthex1", "./e2e/zachet/puthex/out1.txt"},
+        {"./e2e/zachet", "puthex_plane/puthex", "./e2e/zachet/puthex_plane/out.txt"},
+        {"./e2e/zachet", "puthex_plane/puthex1", "./e2e/zachet/puthex_plane/out1.txt"},
         {"./e2e/zachet/putoct", "putoct", "./data/zachet_putoct_expected.txt"},
         {"./e2e/zachet/putoct_plane", "putoct_plane", "./e2e/zachet/putoct_plane/out.txt"}
     };

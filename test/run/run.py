@@ -16,8 +16,6 @@ CC = 'g++ -std=c++17 -g -Wall -Wextra'
 CMD = f'{CC} {TEST_CPP} {OBJ_FILES} -o ../{EXE}'
 RUN_CMD = f'./{EXE}' if platform.system() == 'Linux' else f'{EXE}.exe'
 RM_CMD = f'rm ../{EXE}' if platform.system() == 'Linux' else f'rm ../{EXE}.exe'
-print(CMD)
 os.system(CMD)
-print(f'cd .. && {RUN_CMD}')
 os.system(f'cd .. && {RUN_CMD}')
 os.system(RM_CMD)

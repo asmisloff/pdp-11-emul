@@ -6,7 +6,7 @@ PY			= 	python3
 CC 			= 	g++ -std=c++17 -g -Wall -Wextra
 CPP_FILES	= 	$(shell $(PY) cpp_file_list.py)
 O_FILES		=	$(shell $(PY) object_file_list.py)
-RUN			= 	python3 run.py
+RUN			= 	@$(PY) run.py
 
 LOG: PdpWord Loader
 	echo $<
