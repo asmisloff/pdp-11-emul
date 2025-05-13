@@ -89,7 +89,8 @@ void testAsh() {
     };
     auto testCase = [&m, &cmd](TestData&& td) {
         m.reg(1) = td.initialValue;
-        cmd->exec(00720100 | (td.shift & 077), m);
+        m.reg(0) = td.shift;
+        cmd->exec(00720100, m);
         assert(m.psw.carryBit == td.expectedCarryBit);
         assert(m.psw.negBit == (td.expectedValue.toSigned() < 0));
         assert(m.reg(1) == td.expectedValue);
