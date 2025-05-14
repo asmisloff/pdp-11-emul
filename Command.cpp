@@ -20,7 +20,6 @@ void Command::logDebug(Machine& m) const {
     m.logger().debug() << '\n' << (m.pc() - 2) << ": " << name() << ' ';
 }
 
-
 AddCommand::AddCommand    () : Command("ADD",   0170000, 0060000) {}
 BeqCommand::BeqCommand    () : Command("BEQ",   0177400, 0001400) {}
 BplCommand::BplCommand    () : Command("BPL",   0177400, 0100000) {}

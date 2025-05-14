@@ -7,9 +7,10 @@
 #include "../Memory.h"
 #include "../Logger.h"
 
+/** Монитор (экран). */
 class Monitor : public Device {
 public:
-    explicit Monitor(Memory *const mem, Logger * const logger);
+    explicit Monitor(Memory *const mem, Logger *const logger);
     Monitor() = delete;
     Monitor(const Monitor&) = delete;
     Monitor(Monitor&&) = delete;
@@ -18,9 +19,10 @@ public:
     bool owns(PdpAddr addr) const override;
     void enqueue(const PdpByte byte) override;
 private:
+    /** Старт потока и запуск в нем цикла проверки изменений в выделенной монитору области памяти. */
     static void run(const Monitor* instance);
-    Memory * mem_;
-    Logger * logger_;
+    Memory* mem_;
+    Logger* logger_;
     std::thread thread_;
     bool shutdown_ = false;
 };

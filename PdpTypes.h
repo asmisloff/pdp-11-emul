@@ -10,52 +10,66 @@ constexpr int PDP_BYTE_SIZE = 8;
 typedef uint8_t PdpByte;
 typedef uint16_t PdpAddr;
 
+/** Машинное слово. */
 class PdpWord {
- public:
-  PdpWord(uint16_t w) : lo_{uint8_t(w)}, hi_{uint8_t(w >> 8)}
-  {}
+public:
 
-  PdpWord(PdpByte low, PdpByte high) : lo_(low), hi_(high)
-  {}
+    PdpWord(uint16_t w) 
+        : lo_{ uint8_t(w) }
+        , hi_{ uint8_t(w >> 8) }
+    {}
 
-  static PdpWord fromByte(int8_t lo) {
-    PdpByte hi = lo < 0 ? 0xff : 0;
-    return PdpWord(lo, hi);
-  }
+    PdpWord(PdpByte low, PdpByte high)
+        : lo_(low),
+        hi_(high)
+    {}
 
-  PdpByte low() const { return lo_; }
-  PdpByte high() const { return hi_; }
-  uint16_t toUnsigned() const { return (uint16_t(hi_) << 8) | uint16_t(lo_); }
-  int16_t toSigned() const { return int16_t(toUnsigned()); }
-  PdpWord operator+(const PdpWord &other) const { return PdpWord(toUnsigned() + other.toUnsigned()); }
-  PdpWord operator-(const PdpWord &other) const { return PdpWord(toUnsigned() - other.toUnsigned()); }
-  PdpWord operator-(int amount) const { return PdpWord(toUnsigned() - amount); }
-  void operator+=(int amount) { assign(toUnsigned() + amount); }
-  void operator-=(int amount) { assign(toUnsigned() - amount); }
-  PdpWord operator++(int);
-  PdpWord& operator--();
-  operator PdpAddr() const { return toUnsigned(); }
+    static PdpWord fromByte(int8_t lo) {
+        PdpByte hi = lo < 0 ? 0xff : 0;
+        return PdpWord(lo, hi);
+    }
 
- private:
-  uint8_t lo_;
-  uint8_t hi_;
-  void assign(uint16_t word) { lo_ = uint8_t(word), hi_ = uint8_t(word >> 8); }
+    /** @returns младший байт. */
+    PdpByte low() const { return lo_; }
+
+    /** @returns старший байт. */
+    PdpByte high() const { return hi_; }
+
+    /** @returns 16-битное беззнаковое представление. */
+    uint16_t toUnsigned() const { return (uint16_t(hi_) << 8) | uint16_t(lo_); }
+
+    /** @returns 16-битное знаковое представление. */
+    int16_t toSigned() const { return int16_t(toUnsigned()); }
+    
+    PdpWord operator+(const PdpWord& other) const { return PdpWord(toUnsigned() + other.toUnsigned()); }
+    PdpWord operator-(const PdpWord& other) const { return PdpWord(toUnsigned() - other.toUnsigned()); }
+    PdpWord operator-(int amount) const { return PdpWord(toUnsigned() - amount); }
+    void operator+=(int amount) { assign(toUnsigned() + amount); }
+    void operator-=(int amount) { assign(toUnsigned() - amount); }
+    PdpWord operator++(int);
+    PdpWord& operator--();
+    operator PdpAddr() const { return toUnsigned(); }
+
+private:
+    uint8_t lo_;
+    uint8_t hi_;
+    void assign(uint16_t word) { lo_ = uint8_t(word), hi_ = uint8_t(word >> 8); }
 };
 
-inline std::ostream& operator<<(std::ostream &out, const PdpWord &word) {
-  return out << std::oct << std::setfill('0') << std::setw(6)
-             << word.toUnsigned() << std::dec;
+inline std::ostream& operator<<(std::ostream& out, const PdpWord& word) {
+    return out << std::oct << std::setfill('0') << std::setw(6)
+        << word.toUnsigned() << std::dec;
 }
 
-inline PdpWord PdpWord::operator++(int)  {
-  PdpWord copy = *this;
-  *this += 2; 
-  return copy;
+inline PdpWord PdpWord::operator++(int) {
+    PdpWord copy = *this;
+    *this += 2;
+    return copy;
 }
 
 inline PdpWord& PdpWord::operator--() {
-  *this -= 2;
-  return *this;
+    *this -= 2;
+    return *this;
 }
 
 #endif
