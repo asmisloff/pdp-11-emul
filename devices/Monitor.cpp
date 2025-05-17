@@ -33,7 +33,7 @@ void Monitor::run(const Monitor *instance) {
     while (!instance->shutdown_) {
         if (instance->mem_->getByte(STATE_ADDR) == WORKS) {
             auto byte = instance->mem_->getByte(DATA_ADDR);
-            instance->logger_->info() << byte << std::flush;
+            instance->logger_->info() << byte;
             instance->mem_->setByte(DATA_ADDR, 0);
             instance->mem_->setByte(STATE_ADDR, READY);
         }
