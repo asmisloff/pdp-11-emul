@@ -4,12 +4,9 @@ all: $(TESTS)
 
 PY			= 	python3
 CC 			= 	g++ -std=c++17 -g -Wall -Wextra
-CPP_FILES	= 	$(shell $(PY) cpp_file_list.py)
-O_FILES		=	$(shell $(PY) object_file_list.py)
+CPP_FILES	= 	$(shell $(PY) ../../build/cpp_file_list.py)
+O_FILES		=	$(shell $(PY) ../../build/object_file_list.py)
 RUN			= 	@$(PY) run.py
-
-LOG: PdpWord Loader
-	echo $<
 
 $(O_FILES): $(CPP_FILES)
 	$(CC) -c $(CPP_FILES)
